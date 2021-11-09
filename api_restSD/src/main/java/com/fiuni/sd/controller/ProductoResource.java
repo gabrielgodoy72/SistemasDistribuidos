@@ -25,7 +25,7 @@ public class ProductoResource {
     private IProductoService productoService;
 	
 	@PostMapping(path = "productos")
-	public ResponseEntity<ProductoDTO> createClient(@RequestBody ProductoDTO productoDto) {
+	public ResponseEntity<ProductoDTO> createProducto(@RequestBody ProductoDTO productoDto) {
 		if(productoDto.getId() == null || productoDto.getId() == 0) {
 			ProductoDTO newProducto = productoService.save(productoDto);
 			return ResponseEntity.ok(newProducto);
@@ -34,7 +34,7 @@ public class ProductoResource {
 	}
 	
 	@GetMapping(path = "productos/{id}")
-	public ResponseEntity<ProductoDTO> readClient(@PathVariable(value = "id") Integer id) {
+	public ResponseEntity<ProductoDTO> readProducto(@PathVariable(value = "id") Integer id) {
 		try {
 			ProductoDTO clientDto = productoService.getById(id);
 			return ResponseEntity.ok(clientDto);
@@ -44,7 +44,7 @@ public class ProductoResource {
 	}
 
 	@GetMapping(path = "productos/page/{page_num}")
-	public ProductoResult readClients(@PathVariable(value = "page_num") Integer pageNum) {
+	public ProductoResult readProductos(@PathVariable(value = "page_num") Integer pageNum) {
 		return productoService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 	
