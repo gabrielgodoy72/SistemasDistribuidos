@@ -59,19 +59,19 @@ public class UsuarioDomain implements BaseDomain {
 		this.id = id;
 	}
 
-	public String getFirstName() {
+	public String getNombre() {
 		return nombre;
 	}
 
-	public void setFirstName(String firstName) {
+	public void setNombre(String firstName) {
 		this.nombre = firstName;
 	}
 
-	public String getLastName() {
+	public String getApellido() {
 		return apellido;
 	}
 
-	public void setLastName(String lastName) {
+	public void setApellido(String lastName) {
 		this.apellido = lastName;
 	}
 

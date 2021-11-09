@@ -8,25 +8,25 @@ import com.fiuni.sd.dto.base.BaseDTO;
 public class UsuarioDTO extends BaseDTO {
 	private static final long serialVersionUID = 1L;
 
-	private String firstName;
-	private String lastName;
+	private String nombre;
+	private String apellido;
 	private String email;
 	private String username;
 
-	public String getFirstName() {
-		return firstName;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setNombre(String firstName) {
+		this.nombre = firstName;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getApellido() {
+		return apellido;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setApellido(String lastName) {
+		this.apellido = lastName;
 	}
 
 	public String getEmail() {

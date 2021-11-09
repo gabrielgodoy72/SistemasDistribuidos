@@ -73,8 +73,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	protected UsuarioDTO convertDomainToDto(UsuarioDomain domain) {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setId(domain.getId());
-		dto.setFirstName(domain.getFirstName());
-		dto.setLastName(domain.getLastName());
+		dto.setNombre(domain.getNombre());
+		dto.setApellido(domain.getApellido());
 		dto.setEmail(domain.getEmail());
 		dto.setUsername(domain.getUsername());
         return dto;
@@ -84,8 +84,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	protected UsuarioDomain convertDtoToDomain(UsuarioDTO dto) {
 		final UsuarioDomain domain = new UsuarioDomain();
 		domain.setId(dto.getId());
-		domain.setFirstName(dto.getFirstName());
-		domain.setLastName(dto.getLastName());
+		domain.setNombre(dto.getNombre());
+		domain.setApellido(dto.getApellido());
 		domain.setEmail(dto.getEmail());
 		domain.setUsername(dto.getUsername());
         return domain;
