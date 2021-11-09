@@ -58,7 +58,11 @@ public class ProveedorDTO extends BaseDTO {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-    
-    
+
+	@Override
+	public String toString() {
+		return "ProveedorDTO [id=" + id + ", nombre=" + nombre + ", ruc=" + ruc + ", telefono=" + telefono
+				+ ", direccion=" + direccion + "]";
+	}
     
 }
