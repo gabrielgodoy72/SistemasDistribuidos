@@ -1,11 +1,11 @@
-package com.fiuni.sd.dto.user;
+package com.fiuni.sd.dto.usuario;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseDTO;
 
 @XmlRootElement(name = "user")
-public class UserDTO extends BaseDTO {
+public class UsuarioDTO extends BaseDTO {
 	private static final long serialVersionUID = 1L;
 
 	private String firstName;

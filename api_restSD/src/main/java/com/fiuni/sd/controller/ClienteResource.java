@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fiuni.sd.dto.client.ClientDTO;
-import com.fiuni.sd.dto.client.ClientResult;
-import com.fiuni.sd.service.client.IClientService;
+import com.fiuni.sd.dto.cliente.ClientDTO;
+import com.fiuni.sd.dto.cliente.ClientResult;
+import com.fiuni.sd.service.cliente.IClienteService;
 import com.fiuni.sd.utils.Setting;
 
 @RestController 
 @RequestMapping("/api")
-public class ClientResource {
+public class ClienteResource {
 	
 	@Autowired
-    private IClientService clientService;
+    private IClienteService clientService;
 	
-	@PostMapping(path = "client")
+	@PostMapping(path = "clientes")
 	public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO clientDto) {
 		if(clientDto.getId() == null || clientDto.getId() == 0) {
 			ClientDTO newClient = clientService.save(clientDto);
@@ -33,7 +33,7 @@ public class ClientResource {
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@GetMapping(path = "client/{id}")
+	@GetMapping(path = "clientes/{id}")
 	public ResponseEntity<ClientDTO> readClient(@PathVariable(value = "id") Integer id) {
 		try {
 			ClientDTO clientDto = clientService.getById(id);
@@ -43,12 +43,12 @@ public class ClientResource {
 		} 
 	}
 
-	@GetMapping(path = "client/page/{page_num}")
+	@GetMapping(path = "clientes/page/{page_num}")
 	public ClientResult readClients(@PathVariable(value = "page_num") Integer pageNum) {
 		return clientService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 	
-	@PutMapping(path = "client")
+	@PutMapping(path = "clientes")
     public ResponseEntity<ClientDTO> updateClient(@RequestBody ClientDTO clientDto) {
 		if(clientDto.getId() != null || clientDto.getId() != 0) {
 			try {
@@ -62,7 +62,7 @@ public class ClientResource {
 		return ResponseEntity.badRequest().build();
     }
 	
-	@DeleteMapping("client/{id}")
+	@DeleteMapping("clientes/{id}")
     public ResponseEntity<ClientDTO> deleteClient(@PathVariable Integer id) {
         try {
         	clientService.deleteById(id);

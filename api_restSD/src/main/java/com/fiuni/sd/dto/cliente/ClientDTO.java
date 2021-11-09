@@ -1,4 +1,4 @@
-package com.fiuni.sd.dto.client;
+package com.fiuni.sd.dto.cliente;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -1,4 +1,4 @@
-package com.fiuni.sd.service.user;
+package com.fiuni.sd.service.usuario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,29 +9,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.fiuni.sd.dao.user.IUserDao;
-import com.fiuni.sd.domain.credentials.User;
-import com.fiuni.sd.dto.user.UserDTO;
-import com.fiuni.sd.dto.user.UserResult;
+import com.fiuni.sd.dao.IUsuarioDao;
+import com.fiuni.sd.domain.credenciales.UsuarioDomain;
+import com.fiuni.sd.dto.usuario.UsuarioDTO;
+import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 
 @Service
-public class UserServiceImpl extends BaseServiceImpl<UserDTO, User, UserResult> implements IUserService {
+public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomain, UsuarioResult> implements IUsuarioService {
 	
 	@Autowired
-	private IUserDao userDao;
+	private IUsuarioDao userDao;
 
 	@Override
-	public UserDTO save(UserDTO dto) {
-		final User userDomain = convertDtoToDomain(dto);
-		final User user = userDao.save(userDomain);
+	public UsuarioDTO save(UsuarioDTO dto) {
+		final UsuarioDomain userDomain = convertDtoToDomain(dto);
+		final UsuarioDomain user = userDao.save(userDomain);
 		return convertDomainToDto(user);
 	}
 
 	@Override
-	public UserDTO getById(Integer id) {
-		Optional<User> result = userDao.findById(id);
-        UserDTO userDto = null;
+	public UsuarioDTO getById(Integer id) {
+		Optional<UsuarioDomain> result = userDao.findById(id);
+        UsuarioDTO userDto = null;
         if(result.isPresent()){
         	userDto = convertDomainToDto(result.get());
         } else {
@@ -41,25 +41,25 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, User, UserResult> 
 	}
 
 	@Override
-	public UserResult getAll(Pageable pageable) {
-		final List<UserDTO> usersDto = new ArrayList<>();
-		Page<User> results = userDao.findAll(pageable);
-		for (User userDomain : results) {
+	public UsuarioResult getAll(Pageable pageable) {
+		final List<UsuarioDTO> usersDto = new ArrayList<>();
+		Page<UsuarioDomain> results = userDao.findAll(pageable);
+		for (UsuarioDomain userDomain : results) {
 			usersDto.add(convertDomainToDto(userDomain));
 		}
-		UserResult userResult = new UserResult();
+		UsuarioResult userResult = new UsuarioResult();
 		userResult.setUsers(usersDto);
 		return userResult;
 	}
 
 	@Override
-	public UserResult getAllUsers() {
-		final List<UserDTO> usersDto = new ArrayList<>();
-		List<User> results = userDao.findAll();
-		for (User userDomain : results) {
+	public UsuarioResult getAllUsers() {
+		final List<UsuarioDTO> usersDto = new ArrayList<>();
+		List<UsuarioDomain> results = userDao.findAll();
+		for (UsuarioDomain userDomain : results) {
 			usersDto.add(convertDomainToDto(userDomain));
 		}
-		UserResult userResult = new UserResult();
+		UsuarioResult userResult = new UsuarioResult();
 		userResult.setUsers(usersDto);
 		return userResult;
 	}
@@ -70,8 +70,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, User, UserResult> 
 	}
 
 	@Override
-	protected UserDTO convertDomainToDto(User domain) {
-		UserDTO dto = new UserDTO();
+	protected UsuarioDTO convertDomainToDto(UsuarioDomain domain) {
+		UsuarioDTO dto = new UsuarioDTO();
 		dto.setId(domain.getId());
 		dto.setFirstName(domain.getFirstName());
 		dto.setLastName(domain.getLastName());
@@ -81,8 +81,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, User, UserResult> 
 	}
 
 	@Override
-	protected User convertDtoToDomain(UserDTO dto) {
-		final User domain = new User();
+	protected UsuarioDomain convertDtoToDomain(UsuarioDTO dto) {
+		final UsuarioDomain domain = new UsuarioDomain();
 		domain.setId(dto.getId());
 		domain.setFirstName(dto.getFirstName());
 		domain.setLastName(dto.getLastName());

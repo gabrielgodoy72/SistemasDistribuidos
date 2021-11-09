@@ -1,4 +1,4 @@
-package com.fiuni.sd.domain.client;
+package com.fiuni.sd.domain.cliente;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,8 @@ import javax.persistence.Table;
 import com.fiuni.sd.domain.base.BaseDomain;
 
 @Entity
-@Table(name = "client")
-public class ClientDomain implements BaseDomain{
+@Table(name = "clientes")
+public class ClienteDomain implements BaseDomain{
 
 	private static final long serialVersionUID = 1L;
 	

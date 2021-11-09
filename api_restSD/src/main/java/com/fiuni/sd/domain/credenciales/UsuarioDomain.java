@@ -1,4 +1,4 @@
-package com.fiuni.sd.domain.credentials;
+package com.fiuni.sd.domain.credenciales;
 
 import java.util.Set;
 
@@ -19,8 +19,8 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fiuni.sd.domain.base.BaseDomain;
 
 @Entity
-@Table(name = "usuario")
-public class User implements BaseDomain {
+@Table(name = "usuarios")
+public class UsuarioDomain implements BaseDomain {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -29,11 +29,11 @@ public class User implements BaseDomain {
 	@GenericGenerator(name = "native", strategy = "native")
 	private Integer id;
 
-	@Column(name = "first_name")
-	private String firstName;
+	@Column(name = "nombre")
+	private String nombre;
 	
-	@Column(name = "last_name")
-	private String lastName;
+	@Column(name = "apellido")
+	private String apellido;
 	
 	@Column(name = "email")
 	private String email;
@@ -49,7 +49,7 @@ public class User implements BaseDomain {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private Set<RoleDomain> roles;
 
 	public Integer getId() {
 		return id;
@@ -60,19 +60,19 @@ public class User implements BaseDomain {
 	}
 
 	public String getFirstName() {
-		return firstName;
+		return nombre;
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.nombre = firstName;
 	}
 
 	public String getLastName() {
-		return lastName;
+		return apellido;
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.apellido = lastName;
 	}
 
 	public String getEmail() {
@@ -107,17 +107,17 @@ public class User implements BaseDomain {
 		this.confirmPassword = confirmPassword;
 	}
 
-	public Set<Role> getRoles() {
+	public Set<RoleDomain> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<Role> roles) {
+	public void setRoles(Set<RoleDomain> roles) {
 		this.roles = roles;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+		return "User [id=" + id + ", firstName=" + nombre + ", lastName=" + apellido + ", email=" + email
 				+ ", username=" + username + ", password=" + password + ", roles=" + roles + "]";
 	}
 

@@ -1,4 +1,4 @@
-package com.fiuni.sd.dto.client;
+package com.fiuni.sd.dto.cliente;
 
 import java.util.List;
 

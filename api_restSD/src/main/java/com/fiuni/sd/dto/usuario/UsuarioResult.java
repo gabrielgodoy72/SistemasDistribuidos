@@ -1,4 +1,4 @@
-package com.fiuni.sd.dto.employee;
+package com.fiuni.sd.dto.usuario;
 
 import java.util.List;
 
@@ -7,18 +7,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseResult;
 
-@XmlRootElement(name = "employeeResult")
-public class EmployeeResult extends BaseResult<EmployeeDTO> {
+@XmlRootElement(name = "userResult")
+public class UsuarioResult extends BaseResult<UsuarioDTO> {
 
 	private static final long serialVersionUID = 1L;
 
 	@XmlElement
-	public List<EmployeeDTO> getEmployees() {
+	public List<UsuarioDTO> getUsers() {
 		return getList();
 	}
 
-	public void setEmployees(List<EmployeeDTO> dtos) {
+	public void setUsers(List<UsuarioDTO> dtos) {
 		super.setList(dtos);
 	}
-	
 }

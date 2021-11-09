@@ -1,4 +1,4 @@
-package com.fiuni.sd.service.client;
+package com.fiuni.sd.service.cliente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,28 +9,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.fiuni.sd.dao.client.IClientDao;
-import com.fiuni.sd.domain.client.ClientDomain;
-import com.fiuni.sd.dto.client.ClientDTO;
-import com.fiuni.sd.dto.client.ClientResult;
+import com.fiuni.sd.dao.IClienteDao;
+import com.fiuni.sd.domain.cliente.ClienteDomain;
+import com.fiuni.sd.dto.cliente.ClientDTO;
+import com.fiuni.sd.dto.cliente.ClientResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 
 @Service
-public class ClientServiceImpl  extends BaseServiceImpl<ClientDTO, ClientDomain, ClientResult> implements IClientService{
+public class ClienteServiceImpl  extends BaseServiceImpl<ClientDTO, ClienteDomain, ClientResult> implements IClienteService{
 	
 	@Autowired
-	private IClientDao clientDao;
+	private IClienteDao clientDao;
 
 	@Override
 	public ClientDTO save(ClientDTO dto) {
-		final ClientDomain clientDomain = convertDtoToDomain(dto);
-		final ClientDomain client = clientDao.save(clientDomain);
+		final ClienteDomain clientDomain = convertDtoToDomain(dto);
+		final ClienteDomain client = clientDao.save(clientDomain);
 		return convertDomainToDto(client);
 	}
 
 	@Override
 	public ClientDTO getById(Integer id) {
-		Optional<ClientDomain> result = clientDao.findById(id);
+		Optional<ClienteDomain> result = clientDao.findById(id);
         ClientDTO client = null;
         if(result.isPresent()){
         	client = convertDomainToDto(result.get());
@@ -43,8 +43,8 @@ public class ClientServiceImpl  extends BaseServiceImpl<ClientDTO, ClientDomain,
 	@Override
 	public ClientResult getAll(Pageable pageable) {
 		final List<ClientDTO> clients = new ArrayList<>();
-		Page<ClientDomain> results = clientDao.findAll(pageable);
-		for (ClientDomain clientDomain : results) {
+		Page<ClienteDomain> results = clientDao.findAll(pageable);
+		for (ClienteDomain clientDomain : results) {
 			clients.add(convertDomainToDto(clientDomain));
 		}
 		ClientResult clientResult = new ClientResult();
@@ -58,7 +58,7 @@ public class ClientServiceImpl  extends BaseServiceImpl<ClientDTO, ClientDomain,
 	}
 
 	@Override
-	protected ClientDTO convertDomainToDto(ClientDomain domain) {
+	protected ClientDTO convertDomainToDto(ClienteDomain domain) {
 		final ClientDTO dto = new ClientDTO();
 		dto.setId(domain.getId());
 		dto.setCi(domain.getCi());
@@ -70,8 +70,8 @@ public class ClientServiceImpl  extends BaseServiceImpl<ClientDTO, ClientDomain,
 	}
 
 	@Override
-	protected ClientDomain convertDtoToDomain(ClientDTO dto) {
-		final ClientDomain domain = new ClientDomain();
+	protected ClienteDomain convertDtoToDomain(ClientDTO dto) {
+		final ClienteDomain domain = new ClienteDomain();
 		domain.setId(dto.getId());
 		domain.setCi(dto.getCi());
 		domain.setNombre(dto.getNombre());
