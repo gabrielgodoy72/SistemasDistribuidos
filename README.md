@@ -1,2 +1,2 @@
 # SistemasDistribuidos
- Proyecto de Sistemas Distribuidos
+ Proyecto Sistema para una empresa que Provee Internet
