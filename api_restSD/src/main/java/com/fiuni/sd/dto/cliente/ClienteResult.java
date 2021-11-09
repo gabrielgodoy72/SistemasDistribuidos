@@ -6,17 +6,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import com.fiuni.sd.dto.base.BaseResult;
 
-@XmlRootElement(name = "clientResult")
-public class ClientResult extends BaseResult<ClientDTO> {
+@XmlRootElement(name = "clienteResult")
+public class ClienteResult extends BaseResult<ClienteDTO> {
 
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement
-	public List<ClientDTO> getClients() {
+	public List<ClienteDTO> getClientes() {
 		return getList();
 	}
 
-	public void setClients(List<ClientDTO> dtos) {
+	public void setClientes(List<ClienteDTO> dtos) {
 		super.setList(dtos);
 	}
 

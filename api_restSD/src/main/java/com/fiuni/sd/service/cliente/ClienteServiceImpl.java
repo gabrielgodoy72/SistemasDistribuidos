@@ -11,44 +11,44 @@ import org.springframework.stereotype.Service;
 
 import com.fiuni.sd.dao.IClienteDao;
 import com.fiuni.sd.domain.cliente.ClienteDomain;
-import com.fiuni.sd.dto.cliente.ClientDTO;
-import com.fiuni.sd.dto.cliente.ClientResult;
+import com.fiuni.sd.dto.cliente.ClienteDTO;
+import com.fiuni.sd.dto.cliente.ClienteResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 
 @Service
-public class ClienteServiceImpl  extends BaseServiceImpl<ClientDTO, ClienteDomain, ClientResult> implements IClienteService{
+public class ClienteServiceImpl  extends BaseServiceImpl<ClienteDTO, ClienteDomain, ClienteResult> implements IClienteService{
 	
 	@Autowired
 	private IClienteDao clientDao;
 
 	@Override
-	public ClientDTO save(ClientDTO dto) {
+	public ClienteDTO save(ClienteDTO dto) {
 		final ClienteDomain clientDomain = convertDtoToDomain(dto);
 		final ClienteDomain client = clientDao.save(clientDomain);
 		return convertDomainToDto(client);
 	}
 
 	@Override
-	public ClientDTO getById(Integer id) {
+	public ClienteDTO getById(Integer id) {
 		Optional<ClienteDomain> result = clientDao.findById(id);
-        ClientDTO client = null;
+        ClienteDTO client = null;
         if(result.isPresent()){
         	client = convertDomainToDto(result.get());
         } else {
-            throw new RuntimeException("Did not find employee id: " + id);
+            throw new RuntimeException("Did not find client id: " + id);
         }
         return client;
 	}
 
 	@Override
-	public ClientResult getAll(Pageable pageable) {
-		final List<ClientDTO> clients = new ArrayList<>();
+	public ClienteResult getAll(Pageable pageable) {
+		final List<ClienteDTO> clients = new ArrayList<>();
 		Page<ClienteDomain> results = clientDao.findAll(pageable);
 		for (ClienteDomain clientDomain : results) {
 			clients.add(convertDomainToDto(clientDomain));
 		}
-		ClientResult clientResult = new ClientResult();
-		clientResult.setClients(clients);
+		ClienteResult clientResult = new ClienteResult();
+		clientResult.setClientes(clients);
 		return clientResult;
 	}
 
@@ -58,8 +58,8 @@ public class ClienteServiceImpl  extends BaseServiceImpl<ClientDTO, ClienteDomai
 	}
 
 	@Override
-	protected ClientDTO convertDomainToDto(ClienteDomain domain) {
-		final ClientDTO dto = new ClientDTO();
+	protected ClienteDTO convertDomainToDto(ClienteDomain domain) {
+		final ClienteDTO dto = new ClienteDTO();
 		dto.setId(domain.getId());
 		dto.setCi(domain.getCi());
 		dto.setNombre(domain.getNombre());
@@ -70,7 +70,7 @@ public class ClienteServiceImpl  extends BaseServiceImpl<ClientDTO, ClienteDomai
 	}
 
 	@Override
-	protected ClienteDomain convertDtoToDomain(ClientDTO dto) {
+	protected ClienteDomain convertDtoToDomain(ClienteDTO dto) {
 		final ClienteDomain domain = new ClienteDomain();
 		domain.setId(dto.getId());
 		domain.setCi(dto.getCi());

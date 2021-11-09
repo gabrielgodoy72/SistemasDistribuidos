@@ -5,8 +5,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseDTO;
 
-@XmlRootElement(name = "client")
-public class ClientDTO extends BaseDTO {
+@XmlRootElement(name = "clientes")
+public class ClienteDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
