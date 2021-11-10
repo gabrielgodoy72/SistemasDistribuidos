@@ -9,5 +9,4 @@ public abstract class BaseServiceImpl<DTO extends BaseDTO, DOMAIN extends BaseDo
 	protected abstract DTO convertDomainToDto(DOMAIN domain);
 
 	protected abstract DOMAIN convertDtoToDomain(DTO dto);
-
 }

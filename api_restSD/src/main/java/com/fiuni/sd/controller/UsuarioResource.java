@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fiuni.sd.dto.usuario.UsuarioDTO;
+import com.fiuni.sd.dto.usuario.UsuarioDTO2;
 import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.fiuni.sd.service.usuario.IUsuarioService;
 import com.fiuni.sd.utils.Setting;
@@ -25,9 +26,9 @@ public class UsuarioResource {
 	private IUsuarioService userService;
 	
 	@PostMapping(path = "usuario")
-	public ResponseEntity<UsuarioDTO> createUser(@RequestBody UsuarioDTO userDto) {
+	public ResponseEntity<UsuarioDTO> createUser(@RequestBody UsuarioDTO2 userDto) {
 		if(userDto.getId() == null || userDto.getId() == 0) {
-			UsuarioDTO newUser = userService.save(userDto);
+			UsuarioDTO newUser = userService.saveFirst(userDto);
 			return ResponseEntity.ok(newUser);
 		}
 		return ResponseEntity.badRequest().build();

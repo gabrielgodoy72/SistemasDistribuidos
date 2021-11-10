@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fiuni.sd.dao.IUsuarioDao;
 import com.fiuni.sd.domain.credenciales.UsuarioDomain;
 import com.fiuni.sd.dto.usuario.UsuarioDTO;
+import com.fiuni.sd.dto.usuario.UsuarioDTO2;
 import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 
@@ -24,6 +25,14 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	@Override
 	public UsuarioDTO save(UsuarioDTO dto) {
 		final UsuarioDomain userDomain = convertDtoToDomain(dto);
+		final UsuarioDomain user = userDao.save(userDomain);
+		return convertDomainToDto(user);
+	}
+	
+
+	@Override
+	public UsuarioDTO saveFirst(UsuarioDTO2 dto2) {
+		final UsuarioDomain userDomain = convertoDto2ToDomain(dto2);
 		final UsuarioDomain user = userDao.save(userDomain);
 		return convertDomainToDto(user);
 	}
@@ -88,6 +97,19 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		domain.setApellido(dto.getApellido());
 		domain.setEmail(dto.getEmail());
 		domain.setUsername(dto.getUsername());
+        return domain;
+	}
+
+
+	@Override
+	public UsuarioDomain convertoDto2ToDomain(UsuarioDTO2 dto2) {
+		final UsuarioDomain domain = new UsuarioDomain();
+		domain.setId(dto2.getId());
+		domain.setNombre(dto2.getNombre());
+		domain.setApellido(dto2.getApellido());
+		domain.setEmail(dto2.getEmail());
+		domain.setUsername(dto2.getUsername());
+		domain.setPassword(dto2.getPassword());
         return domain;
 	}
 
