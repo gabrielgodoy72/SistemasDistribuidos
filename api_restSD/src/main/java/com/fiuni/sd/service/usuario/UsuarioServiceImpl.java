@@ -29,7 +29,6 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		return convertDomainToDto(user);
 	}
 	
-
 	@Override
 	public UsuarioDTO saveFirst(UsuarioDTO2 dto2) {
 		final UsuarioDomain userDomain = convertoDto2ToDomain(dto2);
