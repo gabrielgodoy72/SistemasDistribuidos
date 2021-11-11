@@ -30,6 +30,21 @@ public class ProveedorManager extends AbstractBaseManager  {
 			}    
 		} catch (Exception e) { e.printStackTrace(); }
 	}
+	
+	public void updateProveedor( ProveedorDTO proveedorDto) {
+		String proveedorJson = gson.toJson(proveedorDto);
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(path)).header("Content-Type", "application/json").PUT(HttpRequest.BodyPublishers.ofString(proveedorJson)).build();
+		HttpResponse<String> response;
+		try {
+			response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() == 200) {
+				ProveedorDTO proveedor = gson.fromJson(response.body(), ProveedorDTO.class);
+				System.out.println(proveedor.toString());
+			} else {
+				System.out.println("Ocurrió un error al actualizar el proveedor");
+			}    
+		} catch (Exception e) { e.printStackTrace(); }
+	}
 
 	public void getProveedoryId(int id) {
 		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(path + id)).build();
@@ -58,7 +73,7 @@ public class ProveedorManager extends AbstractBaseManager  {
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 
-	public void getClients(int page_num) {
+	public void getProveedores(int page_num) {
 		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(path + "page/" + page_num)).build();
 		HttpResponse<String> response;
 		try {

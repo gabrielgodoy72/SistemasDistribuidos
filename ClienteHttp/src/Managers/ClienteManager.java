@@ -5,6 +5,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 import com.fiuni.sd.dto.cliente.ClienteDTO;
+import com.fiuni.sd.dto.proveedor.ProveedorDTO;
 import com.google.gson.Gson;
 
 public class ClienteManager extends AbstractBaseManager {
@@ -43,6 +44,21 @@ public class ClienteManager extends AbstractBaseManager {
 			} else {
 				System.out.println("El servidor no pudo encontrar el contenido solicitado");
 			}
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	public void updateClient(ClienteDTO clienteDto) {
+		String clienteJson = gson.toJson(clienteDto);
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(path)).header("Content-Type", "application/json").PUT(HttpRequest.BodyPublishers.ofString(clienteJson)).build();
+		HttpResponse<String> response;
+		try {
+			response = getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() == 200) {
+				ClienteDTO cliente = gson.fromJson(response.body(), ClienteDTO.class);
+				System.out.println(cliente.toString());
+			} else {
+				System.out.println("Ocurrió un error al actualizar al cliente");
+			}    
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 
