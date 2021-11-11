@@ -17,4 +17,12 @@ public abstract class AbstractBaseManager {
 	protected HttpClient getHttpClient() {
 		return httpClient;
 	}
+	
+	public String getList(String response) {
+		return response.substring(response.indexOf('[') + 1, response.indexOf(']'));
+	}
+	
+	public int getListSize(String response) {
+		return Integer.parseInt(response.substring(response.lastIndexOf(':') + 1, response.lastIndexOf('}')));
+	}
 }
