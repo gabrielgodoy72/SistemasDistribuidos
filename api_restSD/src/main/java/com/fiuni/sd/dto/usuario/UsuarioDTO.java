@@ -45,4 +45,10 @@ public class UsuarioDTO extends BaseDTO {
 		this.username = username;
 	}
 
+	@Override
+	public String toString() {
+		return "UsuarioDTO [nombre=" + nombre + ", apellido=" + apellido + ", email=" + email + ", username=" + username
+				+ "]";
+	}
+
 }

@@ -7,7 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/gson-2.8.2.jar"/>
-	<classpathentry kind="lib" path="lib/json-20180813.jar"/>
-	<classpathentry kind="lib" path="lib/dtos.jar"/>
+	<classpathentry kind="lib" path="lib/ApiDTO.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
