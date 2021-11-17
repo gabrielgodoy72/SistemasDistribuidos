@@ -1,11 +1,6 @@
 package com.fiuni.sd.service.servicio;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -14,64 +9,78 @@ import com.fiuni.sd.domain.servicio.ServicioDomain;
 import com.fiuni.sd.dto.servicio.ServicioDTO;
 import com.fiuni.sd.dto.servicio.ServicioResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
+import com.fiuni.sd.utils.ResourceNotFoundException;
 
 @Service
-public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDomain, ServicioResult> implements IServicioService{
+public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDomain, ServicioResult>
+		implements IServicioService {
 
 	@Autowired
-	private IServicioDao servicioDao;
-	
+	private IServicioDao repository; // repository
+
 	@Override
-	public ServicioDTO save(ServicioDTO dto) {
-		final ServicioDomain servicioDomain = convertDtoToDomain(dto);
-		final ServicioDomain servicio = servicioDao.save(servicioDomain);
-		return convertDomainToDto(servicio);
+	public ServicioDTO save(final ServicioDTO dto) {
+		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
-	public ServicioDTO getById(Integer id) {
-		Optional<ServicioDomain> result = servicioDao.findById(id);
-        ServicioDTO servicio = null;
-        if(result.isPresent()){
-        	servicio = convertDomainToDto(result.get());
-        } else {
-            throw new RuntimeException("Did not find product id: " + id);
-        }
-        return servicio;
+	public ServicioDTO getById(final Integer id) {
+		return repository.findById(id)//
+				.map(this::convertDomainToDto)//
+				.orElseThrow(() -> new ResourceNotFoundException("Servicio", "id", id));
 	}
 
 	@Override
-	public ServicioResult getAll(Pageable pageable) {
-		final List<ServicioDTO> servicios = new ArrayList<>();
-		Page<ServicioDomain> results = servicioDao.findAll(pageable);
-		for (ServicioDomain servicioDomain : results) {
-			servicios.add(convertDomainToDto(servicioDomain));
+	public ServicioDTO getByDescripcion(String descripcion) {
+		return repository.findByDescripcion(descripcion)//
+				.map(this::convertDomainToDto)//
+				.orElseThrow(() -> new ResourceNotFoundException("Servicio", "descripcion", descripcion));
+	}
+
+	@Override
+	public ServicioResult getAll(final Pageable pageable) {
+		final ServicioResult result = new ServicioResult();
+		result.setServicios(repository.findAll(pageable)//
+				.map(this::convertDomainToDto)//
+				.toList());
+		return result;
+	}
+
+	@Override
+	public void deleteById(final Integer id) {
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Servicio", "id", id);
 		}
-		ServicioResult servicioResult = new ServicioResult();
-		servicioResult.setServicios(servicios);
-		return servicioResult;
+		repository.deleteById(id);
 	}
 
 	@Override
-	public void deleteById(int id) {
-		servicioDao.deleteById(id);
+	public ServicioDTO update(final Integer id, final ServicioDTO dto) {
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Servicio", "id", id);
+		}
+		if (id != dto.getId()) {
+			throw new ResourceNotFoundException("Servicio", "id", id);
+		}
+		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
-	protected ServicioDTO convertDomainToDto(ServicioDomain domain) {
+	protected ServicioDTO convertDomainToDto(final ServicioDomain domain) {
 		final ServicioDTO dto = new ServicioDTO();
 		dto.setId(domain.getId());
 		dto.setDescripcion(domain.getDescripcion());
 		dto.setCosto(domain.getCosto());
-        return dto;
+		return dto;
 	}
 
 	@Override
-	protected ServicioDomain convertDtoToDomain(ServicioDTO dto) {
+	protected ServicioDomain convertDtoToDomain(final ServicioDTO dto) {
 		final ServicioDomain domain = new ServicioDomain();
 		domain.setId(dto.getId());
 		domain.setDescripcion(dto.getDescripcion());
 		domain.setCosto(dto.getCosto());
-        return domain;
+		return domain;
 	}
+
 }

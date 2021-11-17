@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import com.fiuni.sd.dto.base.BaseResult;
 
-@XmlRootElement(name = "clienteResult")
+@XmlRootElement(name = "proveedorResult")
 public class ProveedorResult extends BaseResult<ProveedorDTO> {
 
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,7 @@
 package com.fiuni.sd.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,59 +19,50 @@ import com.fiuni.sd.dto.cliente.ClienteResult;
 import com.fiuni.sd.service.cliente.IClienteService;
 import com.fiuni.sd.utils.Setting;
 
-@RestController 
+@RestController
 @RequestMapping("/api")
 public class ClienteResource {
-	
+
 	@Autowired
-    private IClienteService clientService;
-	
-	@PostMapping(path = "clientes")
-	public ResponseEntity<ClienteDTO> createClient(@RequestBody ClienteDTO clientDto) {
-		if(clientDto.getId() == null || clientDto.getId() == 0) {
-			ClienteDTO newClient = clientService.save(clientDto);
-			return ResponseEntity.ok(newClient);
-		}
-		return ResponseEntity.badRequest().build();
-	}
-	
-	@GetMapping(path = "clientes/{id}")
-	public ResponseEntity<ClienteDTO> readClient(@PathVariable(value = "id") Integer id) {
+	private IClienteService clienteService;
+
+	@PostMapping(path = "/cliente")
+	public ResponseEntity<ClienteDTO> createClient(@RequestBody @Valid final ClienteDTO clientDto) {
 		try {
-			ClienteDTO clientDto = clientService.getById(id);
+			return ResponseEntity.ok(clienteService.save(clientDto));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@GetMapping(path = "/cliente/{id}")
+	public ResponseEntity<ClienteDTO> readClient(@PathVariable(value = "id") final Integer id) {
+		try {
+			ClienteDTO clientDto = clienteService.getById(id);
 			return ResponseEntity.ok(clientDto);
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
-		} 
+		}
 	}
 
-	@GetMapping(path = "clientes/page/{page_num}")
-	public ClienteResult readClients(@PathVariable(value = "page_num") Integer pageNum) {
-		return clientService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
+	@GetMapping(path = "/clientes/page/{page_num}")
+	public ClienteResult readClients(@PathVariable(value = "page_num") final Integer pageNum) {
+		return clienteService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
-	
-	@PutMapping(path = "clientes")
-    public ResponseEntity<ClienteDTO> updateClient(@RequestBody ClienteDTO clientDto) {
-		if(clientDto.getId() != null || clientDto.getId() != 0) {
-			try {
-				clientService.getById(clientDto.getId());
-				ClienteDTO editedClient = clientService.save(clientDto);
-		        return ResponseEntity.ok(editedClient);
-			} catch (Exception ex) {
-				return ResponseEntity.notFound().build();
-			}
+
+	@PutMapping(path = "/cliente/{id}")
+	public ResponseEntity<ClienteDTO> updateClient(@PathVariable(value = "id") final Integer id,
+			@RequestBody @Valid final ClienteDTO clientDto) {
+		return ResponseEntity.ok(clienteService.update(id, clientDto));
+	}
+
+	@DeleteMapping("/cliente/{id}")
+	public ResponseEntity<ClienteDTO> deleteClient(@PathVariable final Integer id) {
+		try {
+			clienteService.deleteById(id);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			return ResponseEntity.noContent().build();
 		}
-		return ResponseEntity.badRequest().build();
-    }
-	
-	@DeleteMapping("clientes/{id}")
-    public ResponseEntity<ClienteDTO> deleteClient(@PathVariable Integer id) {
-        try {
-        	clientService.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        catch (Exception ex) {
-        	return ResponseEntity.noContent().build();
-        }
-    }
+	}
 }

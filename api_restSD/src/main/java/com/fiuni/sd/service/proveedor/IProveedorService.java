@@ -6,4 +6,10 @@ import com.fiuni.sd.service.base.IBaseService;
 
 public interface IProveedorService extends IBaseService<ProveedorDTO, ProveedorResult> {
 
+	public ProveedorDTO update(final Integer id, final ProveedorDTO dto);
+
+	public ProveedorDTO getByNombre(final String nombre);
+	
+	public ProveedorDTO getByRuc(final String ruc);
+
 }

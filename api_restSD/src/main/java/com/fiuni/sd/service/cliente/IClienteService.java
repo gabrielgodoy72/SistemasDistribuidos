@@ -6,4 +6,6 @@ import com.fiuni.sd.service.base.IBaseService;
 
 public interface IClienteService extends IBaseService<ClienteDTO, ClienteResult> {
 
+	public ClienteDTO update(final Integer id, final ClienteDTO dto);
+
 }

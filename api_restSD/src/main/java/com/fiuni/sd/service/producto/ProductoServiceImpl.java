@@ -1,11 +1,6 @@
 package com.fiuni.sd.service.producto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -14,47 +9,60 @@ import com.fiuni.sd.domain.producto.ProductoDomain;
 import com.fiuni.sd.dto.producto.ProductoDTO;
 import com.fiuni.sd.dto.producto.ProductoResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
+import com.fiuni.sd.utils.ResourceNotFoundException;
 
 @Service
-public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDomain, ProductoResult> implements IProductoService{
+public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDomain, ProductoResult>
+		implements IProductoService {
 
 	@Autowired
-	private IProductoDao productoDao;
-	
+	private IProductoDao productoDao; // repository
+
 	@Override
-	public ProductoDTO save(ProductoDTO dto) {
-		final ProductoDomain productoDomain = convertDtoToDomain(dto);
-		final ProductoDomain producto = productoDao.save(productoDomain);
-		return convertDomainToDto(producto);
+	public ProductoDTO save(final ProductoDTO dto) {
+		return convertDomainToDto(productoDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
-	public ProductoDTO getById(Integer id) {
-		Optional<ProductoDomain> result = productoDao.findById(id);
-        ProductoDTO producto = null;
-        if(result.isPresent()){
-        	producto = convertDomainToDto(result.get());
-        } else {
-            throw new RuntimeException("Did not find product id: " + id);
-        }
-        return producto;
+	public ProductoDTO getById(final Integer id) {
+		return productoDao.findById(id)//
+				.map(this::convertDomainToDto)//
+				.orElseThrow(() -> new ResourceNotFoundException("Producto", "id", id));
 	}
 
 	@Override
-	public ProductoResult getAll(Pageable pageable) {
-		final List<ProductoDTO> productos = new ArrayList<>();
-		Page<ProductoDomain> results = productoDao.findAll(pageable);
-		for (ProductoDomain productoDomain : results) {
-			productos.add(convertDomainToDto(productoDomain));
+	public ProductoResult getAll(final Pageable pageable) {
+		final ProductoResult result = new ProductoResult();
+		result.setProductos(productoDao.findAll(pageable)//
+				.map(this::convertDomainToDto)//
+				.toList());
+		return result;
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		if (!productoDao.existsById(id)) {
+			throw new ResourceNotFoundException("Producto", "id", id);
 		}
-		ProductoResult proveedorResult = new ProductoResult();
-		proveedorResult.setProductos(productos);
-		return proveedorResult;
+		productoDao.deleteById(id);
 	}
 
 	@Override
-	public void deleteById(int id) {
-		productoDao.deleteById(id);
+	public ProductoDTO update(final Integer id, final ProductoDTO dto) {
+		if (!productoDao.existsById(id)) {
+			throw new ResourceNotFoundException("Producto", "id", id);
+		}
+		if (id != dto.getId()) {
+			throw new ResourceNotFoundException("Producto", "id", id);
+		}
+		return convertDomainToDto(productoDao.save(convertDtoToDomain(dto)));
+	}
+
+	@Override
+	public ProductoDTO getByDescripcion(String descripcion) {
+		return productoDao.findByDescripcion(descripcion)//
+				.map(this::convertDomainToDto)//
+				.orElseThrow(() -> new ResourceNotFoundException("Producto", "descripcion", descripcion));
 	}
 
 	@Override
@@ -63,7 +71,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 		dto.setId(domain.getId());
 		dto.setDescripcion(domain.getDescripcion());
 		dto.setCosto(domain.getCosto());
-        return dto;
+		return dto;
 	}
 
 	@Override
@@ -72,6 +80,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 		domain.setId(dto.getId());
 		domain.setDescripcion(dto.getDescripcion());
 		domain.setCosto(dto.getCosto());
-        return domain;
+		return domain;
 	}
+
 }

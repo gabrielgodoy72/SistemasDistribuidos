@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseResult;
 
-@XmlRootElement(name = "userResult")
+@XmlRootElement(name = "usuarioResult")
 public class UsuarioResult extends BaseResult<UsuarioDTO> {
 
 	private static final long serialVersionUID = 1L;
@@ -17,7 +17,7 @@ public class UsuarioResult extends BaseResult<UsuarioDTO> {
 		return getList();
 	}
 
-	public void setUsers(List<UsuarioDTO> dtos) {
+	public void setUsers(final List<UsuarioDTO> dtos) {
 		super.setList(dtos);
 	}
 }

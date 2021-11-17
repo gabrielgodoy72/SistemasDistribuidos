@@ -13,7 +13,7 @@ public abstract class BaseResult<DTO extends BaseDTO> implements Serializable {
 		return _dtos;
 	}
 
-	protected void setList(List<DTO> dtos) {
+	protected void setList(final List<DTO> dtos) {
 		_dtos = dtos;
 	}
 
