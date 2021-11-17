@@ -17,4 +17,5 @@ public class UsuarioResourceImpl extends BaseResourceImpl<UsuarioDTO> implements
         final UsuarioResult result = getWebResource().path("/usuarios/page/" + page).get(UsuarioResult.class);
         return result;
     }
+
 }

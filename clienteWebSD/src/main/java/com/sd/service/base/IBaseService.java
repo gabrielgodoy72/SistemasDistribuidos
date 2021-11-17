@@ -12,4 +12,6 @@ public interface IBaseService<BEAN extends BaseBean, DTO extends BaseDTO> {
     public List<BEAN> getAll(Integer page);
 
     public BEAN getById(Integer id);
+
+    public void delete(Integer id);
 }

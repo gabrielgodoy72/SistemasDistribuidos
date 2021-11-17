@@ -8,4 +8,6 @@ public interface IBaseResource<DTO extends BaseDTO> {
 
     public DTO getById(Integer id, String path);
 
+    public void delete(Integer id, String path);
+
 }

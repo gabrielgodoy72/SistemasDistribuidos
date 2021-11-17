@@ -63,8 +63,9 @@ class UsuarioController {
         [usuarioInstance: usuarioInstance]
     }
 
-    def update(Usuario usuario) {
-        def usuarioInstance = Usuario.get(id)
+    def delete() {
+        def id = Integer.valueOf(params['id'])
+        def usuarioInstance = usuarioService.getById(id)
         if (!usuarioInstance) {
             flash.message = message(code: 'default.not.found.message', args: [
                     message(code: 'usuario.label', default: 'Usuario'),
@@ -73,47 +74,12 @@ class UsuarioController {
             redirect(action: "list")
             return
         }
-
-        if (version != null) {
-            if (usuarioInstance.version > version) {
-                usuarioInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                        [
-                                message(code: 'usuario.label', default: 'Usuario')] as Object[],
-                        "Another user has updated this Usuario while you were editing")
-                render(view: "edit", model: [usuarioInstance: usuarioInstance])
-                return
-            }
-        }
-
-        usuarioInstance.properties = params
-
-        if (!usuarioInstance.save(flush: true)) {
-            render(view: "edit", model: [usuarioInstance: usuarioInstance])
-            return
-        }
-
-        flash.message = message(code: 'default.updated.message', args: [
-                message(code: 'usuario.label', default: 'Usuario'),
-                usuarioInstance.id
-        ])
-        redirect(action: "edit", id: usuarioInstance.id)
-    }
-
-    def delete(Long id) {
-        if (id == null) {
-            notFound()
-            return
-        }
-
-        usuarioService.delete(id)
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'usuario.label', default: 'Usuario'), id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        //try {
+            usuarioService.delete(id)
+       // } catch (Exception e){
+        //    redirect(action: "notFound")
+        //}
+        redirect(action: "list")
     }
 
     protected void notFound() {

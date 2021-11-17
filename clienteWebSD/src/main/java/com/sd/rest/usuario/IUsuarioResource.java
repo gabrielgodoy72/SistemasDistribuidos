@@ -7,4 +7,5 @@ import com.sd.rest.base.IBaseResource;
 public interface IUsuarioResource extends IBaseResource<UsuarioDTO> {
 
     public UsuarioResult getAll(Integer page);
+
 }

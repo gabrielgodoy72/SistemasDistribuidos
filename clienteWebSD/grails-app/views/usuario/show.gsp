@@ -27,7 +27,7 @@
 			</g:eachError>
 		</ul>
 	</g:hasErrors>
-	<g:form method="post" >
+	<g:form method="delete" >
 		<g:hiddenField name="id" value="${usuarioInstance?.id}" />
 		<fieldset class="form" disabled>
 			<g:render template="formShow"/>

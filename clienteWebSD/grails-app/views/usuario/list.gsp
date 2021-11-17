@@ -22,9 +22,9 @@
         <div class="message" role="status">${flash.message}</div>
     </g:if>
 
-    <table class="table border">
-        <thead>
-        <tr>
+    <table class="table table-light">
+        <thead class="table-primary" >
+        <tr class="">
             <th scope="col">Nombre</th>
             <th scope="col">Apellido</th>
             <th scope="col">Email</th>
@@ -38,7 +38,7 @@
                 <td><h6>${fieldValue(bean: usuarioInstance, field: "apellido")}</h6></td>
                 <td><h6>${fieldValue(bean: usuarioInstance, field: "email")}</h6></td>
                 <td><h6><g:link class="edit" action="show" id="${usuarioInstance?.id}">
-                    <button class="btn btn-outline-info">Ver</button>
+                    <button class="btn btn-outline-info btn-sm">Ver</button>
                 </g:link></h6></td>
             </tr>
         </g:each>

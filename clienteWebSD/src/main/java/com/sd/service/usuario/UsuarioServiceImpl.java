@@ -34,6 +34,11 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
+    public void delete(Integer id) {
+        usuarioResource.delete(id, "usuario");
+    }
+
+    @Override
     protected UsuarioB convertDtoToBean(UsuarioDTO dto) {
         final Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(dto.getId()));

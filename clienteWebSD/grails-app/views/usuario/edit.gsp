@@ -33,7 +33,7 @@
             <g:render template="formShow"/>
         </fieldset>
         <fieldset class="buttons">
-            <g:actionSubmit class="save" action="save" value="${message(code: 'default.button.edit.label', default: 'Editar')}" />
+            <g:actionSubmit class="save" action="save" value="Guardar" />
             <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" formnovalidate="" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
         </fieldset>
     </g:form>
