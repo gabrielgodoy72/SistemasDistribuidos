@@ -4,11 +4,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 
-@Getter
-@Setter
+//@Getter
+//@Setter
 @XmlRootElement(name = "factura_compra_detalle")
 public class FacturaCompraDetalleDTO extends BaseDTO {
 
@@ -21,5 +21,37 @@ public class FacturaCompraDetalleDTO extends BaseDTO {
 	private Integer producto_id;
 
 	private Integer factura_id;
+
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public Integer getProducto_id() {
+		return producto_id;
+	}
+
+	public void setProducto_id(Integer producto_id) {
+		this.producto_id = producto_id;
+	}
+
+	public Integer getFactura_id() {
+		return factura_id;
+	}
+
+	public void setFactura_id(Integer factura_id) {
+		this.factura_id = factura_id;
+	}
 
 }

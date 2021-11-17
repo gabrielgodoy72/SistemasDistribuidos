@@ -13,11 +13,11 @@ import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.factura.compra.FacturaCompraDomain;
 import com.fiuni.sd.domain.producto.ProductoDomain;
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 
-@Getter
-@Setter
+//@Getter
+//@Setter
 @Entity
 @Table(name = "factura_compra_detalle")
 public class FacturaCompraDetalleDomain implements BaseDomain {
@@ -42,5 +42,47 @@ public class FacturaCompraDetalleDomain implements BaseDomain {
 	@ManyToOne
 	@JoinColumn(name = "factura_id", nullable = false)
 	private FacturaCompraDomain factura;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public ProductoDomain getProducto() {
+		return producto;
+	}
+
+	public void setProducto(ProductoDomain producto) {
+		this.producto = producto;
+	}
+
+	public FacturaCompraDomain getFactura() {
+		return factura;
+	}
+
+	public void setFactura(FacturaCompraDomain factura) {
+		this.factura = factura;
+	}
+	
+	
 
 }

@@ -16,11 +16,11 @@ import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.cliente.ClienteDomain;
 import com.fiuni.sd.domain.pedido_detalle.PedidoDetalleDomain;
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 
-@Getter
-@Setter
+//@Getter
+//@Setter
 @Entity
 @Table(name = "pedidos")
 public class PedidoDomain implements BaseDomain {
@@ -41,5 +41,37 @@ public class PedidoDomain implements BaseDomain {
 
 	@OneToMany(mappedBy = "pedido")
 	private Set<PedidoDetalleDomain> detalles;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Boolean getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+
+	public ClienteDomain getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteDomain cliente) {
+		this.cliente = cliente;
+	}
+
+	public Set<PedidoDetalleDomain> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(Set<PedidoDetalleDomain> detalles) {
+		this.detalles = detalles;
+	}
 	
 }

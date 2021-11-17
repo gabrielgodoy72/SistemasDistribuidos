@@ -42,4 +42,46 @@ public class ServicioDomain implements BaseDomain {
 	@OneToMany(mappedBy = "servicio")
 	private Set<FacturaVentaDetalleDomain> ventas_detalles;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Double getCosto() {
+		return costo;
+	}
+
+	public void setCosto(Double costo) {
+		this.costo = costo;
+	}
+
+	public Set<PedidoDetalleDomain> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(Set<PedidoDetalleDomain> detalles) {
+		this.detalles = detalles;
+	}
+
+	public Set<FacturaVentaDetalleDomain> getVentas_detalles() {
+		return ventas_detalles;
+	}
+
+	public void setVentas_detalles(Set<FacturaVentaDetalleDomain> ventas_detalles) {
+		this.ventas_detalles = ventas_detalles;
+	}
+	
+	
+
 }

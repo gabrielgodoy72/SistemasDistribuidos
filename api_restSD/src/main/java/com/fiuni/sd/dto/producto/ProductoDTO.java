@@ -17,4 +17,22 @@ public class ProductoDTO extends BaseDTO {
 	
 	private Double costo;
 
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Double getCosto() {
+		return costo;
+	}
+
+	public void setCosto(Double costo) {
+		this.costo = costo;
+	}
+	
+	
+
 }

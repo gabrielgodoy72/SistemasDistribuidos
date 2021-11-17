@@ -15,11 +15,11 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fiuni.sd.domain.base.BaseDomain;
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 
-@Getter
-@Setter
+//@Getter
+//@Setter
 @Entity
 @Table(name = "roles")
 public class RoleDomain implements BaseDomain {
@@ -36,4 +36,29 @@ public class RoleDomain implements BaseDomain {
 
 	@ManyToMany(mappedBy = "roles")
 	private Set<UsuarioDomain> usuarios = new HashSet<UsuarioDomain>();
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public Set<UsuarioDomain> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Set<UsuarioDomain> usuarios) {
+		this.usuarios = usuarios;
+	}
+	
 }

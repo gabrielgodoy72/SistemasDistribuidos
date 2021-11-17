@@ -48,5 +48,55 @@ public class FacturaVentaDomain implements BaseDomain {
 
 	@OneToMany(mappedBy = "factura")
 	private Set<FacturaVentaDetalleDomain> detalles;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+
+	public ClienteDomain getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteDomain cliente) {
+		this.cliente = cliente;
+	}
+
+	public Set<FacturaVentaDetalleDomain> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(Set<FacturaVentaDetalleDomain> detalles) {
+		this.detalles = detalles;
+	}
+	
+	
 	
 }

@@ -43,4 +43,44 @@ public class FacturaVentaDetalleDomain implements BaseDomain {
 	@JoinColumn(name = "factura_id", nullable = false)
 	private FacturaVentaDomain factura;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public ServicioDomain getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(ServicioDomain servicio) {
+		this.servicio = servicio;
+	}
+
+	public FacturaVentaDomain getFactura() {
+		return factura;
+	}
+
+	public void setFactura(FacturaVentaDomain factura) {
+		this.factura = factura;
+	}
+
 }
