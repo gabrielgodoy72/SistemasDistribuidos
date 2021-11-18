@@ -18,12 +18,7 @@ class ProveedorController {
 
     def list(Integer id) {
         def page = Math.max(id?:0,0)
-        def proveedores
-        try {
-            proveedores = proveedorService.getAll(page)
-        } catch (Exception ex) {
-            proveedores = new ArrayList<ProveedorB>()
-        }
+        def proveedores = proveedorService.getAll(page)
 
         [proveedorInstanceList: proveedores, proveedorIntanceTotal: proveedores.size()]
     }
@@ -47,14 +42,21 @@ class ProveedorController {
         redirect(action: "list")
     }
 
-    def update() {
+    def update(Integer id) {
         def proveedorInstance = new ProveedorB(params)
-        def newProveedor = proveedorService.update(proveedorInstance)
+        if (id != proveedorInstance.getId()) {
+            flash.message = message(code: 'default.not.equal.message', args: [
+                    message(code: 'proveedor.label', default: 'Proveedor'),
+                    id
+            ])
+        }
+
+        def newProveedor = proveedorService.update(id, proveedorInstance)
         if (!newProveedor?.getId()) {
             render(view: "create", model: [proveedorInstance: proveedorInstance])
             return
         }
-        System.out.println("Hola Mundo");
+
         flash.message = message(code: 'default.updated.message', args: [
                 message(code: 'proveedor.label', default: 'Proveedor'),
                 newProveedor.getId()

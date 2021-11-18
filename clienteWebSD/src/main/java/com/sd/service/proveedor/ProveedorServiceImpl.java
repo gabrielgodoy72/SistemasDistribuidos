@@ -27,6 +27,9 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
     @Override
     public List<ProveedorB> getAll(Integer page) {
         final ProveedorResult result = proveedorResource.getAll(page);
+        if(result.getProveedores() == null){
+            return Collections.emptyList();
+        }
         return result.getProveedores().stream().map(this::convertDtoToBean).collect(Collectors.toList());
     }
 
@@ -41,8 +44,8 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
     }
 
     @Override
-    public ProveedorB update(ProveedorB bean) {
-        return convertDtoToBean(proveedorResource.update(convertBeanToDto(bean), "proveedor/" + bean.getId()));
+    public ProveedorB update(Integer id, ProveedorB bean) {
+        return convertDtoToBean(proveedorResource.update(id, convertBeanToDto(bean), "proveedor"));
     }
 
     @Override
