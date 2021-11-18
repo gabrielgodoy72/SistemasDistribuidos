@@ -39,8 +39,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
-    public UsuarioB update(UsuarioB bean) {
-        return convertDtoToBean(usuarioResource.update(convertBeanToDto(bean), "usuario"));
+    public UsuarioB update(Integer id, UsuarioB bean) {
+        return convertDtoToBean(usuarioResource.update(id, convertBeanToDto(bean), "usuario"));
     }
 
     @Override

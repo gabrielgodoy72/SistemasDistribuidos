@@ -56,33 +56,23 @@ public class FacturaVentaResource {
 	}
 
 	@GetMapping(path = "/venta/search/date/{fecha}/page/{page_num}")
-	public ResponseEntity<FacturaVentaResult> getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
+	public FacturaVentaResult getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(facturaVentaService.getAllByFecha(fecha, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaVentaService.getAllByFecha(fecha, PageRequest.of(pageNum, Setting.PAGE_SIZE));
+
 	}
 
 	@GetMapping(path = "/venta/search/proveedor/{cliente_id}/page/{page_num}")
-	public ResponseEntity<FacturaVentaResult> getAllByIdCliente(
-			@PathVariable(value = "cliente_id") final Integer idCliente,
+	public FacturaVentaResult getAllByIdCliente(@PathVariable(value = "cliente_id") final Integer idCliente,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(facturaVentaService.getAllByCliente(idCliente, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaVentaService.getAllByCliente(idCliente, PageRequest.of(pageNum, Setting.PAGE_SIZE));
+
 	}
 
 	@GetMapping(path = "/venta/page/{page_num}")
-	public ResponseEntity<FacturaVentaResult> getAll(@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(facturaVentaService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+	public FacturaVentaResult getAll(@PathVariable(value = "page_num") final Integer pageNum) {
+		return facturaVentaService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
+
 	}
 
 	@PutMapping(path = "/venta/{id}")

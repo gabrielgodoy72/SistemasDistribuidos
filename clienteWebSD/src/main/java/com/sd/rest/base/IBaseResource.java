@@ -10,6 +10,6 @@ public interface IBaseResource<DTO extends BaseDTO> {
 
     public void delete(Integer id, String path);
 
-    public DTO update(DTO dto, String path);
+    public DTO update(Integer id, DTO dto, String path);
 
 }

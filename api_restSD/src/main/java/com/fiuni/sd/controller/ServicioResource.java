@@ -55,12 +55,8 @@ public class ServicioResource {
 	}
 
 	@GetMapping(path = "/servicios/page/{page_num}")
-	public ResponseEntity<ServicioResult> getServicios(@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(servicioService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+	public ServicioResult getServicios(@PathVariable(value = "page_num") final Integer pageNum) {
+		return servicioService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/servicio/{id}")

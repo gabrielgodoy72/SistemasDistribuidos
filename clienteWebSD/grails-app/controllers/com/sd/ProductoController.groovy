@@ -10,7 +10,6 @@ class ProductoController {
     //services
     IProductoService productoService
 
-
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index() {
@@ -48,9 +47,16 @@ class ProductoController {
         redirect(action: "list")
     }
 
-    def update() {
+    def update(Integer id) {
         def productoInstance = new ProductoB(params)
-        def newProducto = productoService.save(productoInstance)
+        if (id != productoInstance.getId()) {
+            flash.message = message(code: 'default.not.equal.message', args: [
+                    message(code: 'producto.label', default: 'Producto'),
+                    id
+            ])
+        }
+
+        def newProducto = productoService.update(id, productoInstance)
         if (!newProducto?.getId()) {
             render(view: "create", model: [productoInstance: productoInstance])
             return

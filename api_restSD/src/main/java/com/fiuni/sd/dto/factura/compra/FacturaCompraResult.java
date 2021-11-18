@@ -13,11 +13,11 @@ public class FacturaCompraResult extends BaseResult<FacturaCompraDTO> {
 	private static final long serialVersionUID = 1L;
 
 	@XmlElement
-	public List<FacturaCompraDTO> getFacturaCompra() {
+	public List<FacturaCompraDTO> getFacturasCompra() {
 		return getList();
 	}
 
 	public void setFacturasCompra(List<FacturaCompraDTO> dtos) {
-		setFacturasCompra(dtos);
+		super.setList(dtos);
 	}
 }

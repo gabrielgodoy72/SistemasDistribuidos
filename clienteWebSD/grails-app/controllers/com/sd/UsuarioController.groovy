@@ -47,9 +47,16 @@ class UsuarioController {
         redirect(action: "list")
     }
 
-    def update() {
+    def update(Integer id) {
         def usuarioInstance = new UsuarioB(params)
-        def newUsuario = usuarioService.save(usuarioInstance)
+        if (id != usuarioInstance.getId()) {
+            flash.message = message(code: 'default.not.equal.message', args: [
+                    message(code: 'usuario.label', default: 'Usuario'),
+                    id
+            ])
+        }
+
+        def newUsuario = usuarioService.update(id, usuarioInstance)
         if (!newUsuario?.getId()) {
             render(view: "create", model: [usuarioInstance: usuarioInstance])
             return

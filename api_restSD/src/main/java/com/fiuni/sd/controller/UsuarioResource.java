@@ -49,7 +49,7 @@ public class UsuarioResource {
 		return usuarioService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
-	@PutMapping(path = "/usuario")
+	@PutMapping(path = "/usuario/{id}")
 	public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final UsuarioDTO userDto) {
 		return ResponseEntity.ok(usuarioService.update(id, userDto));

@@ -45,35 +45,20 @@ public class FacturaVentaDetalleResource {
 	}
 
 	@GetMapping(path = "/detalle/search/factura/{factura_id}/page/{page_num}")
-	public ResponseEntity<FacturaVentaDetalleResult> getAllByIdFactura(
-			@PathVariable(value = "factura_id") final Integer idFactura,
+	public FacturaVentaDetalleResult getAllByIdFactura(@PathVariable(value = "factura_id") final Integer idFactura,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(facturaVentaDetalleService.getAllByFactura(idFactura, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaVentaDetalleService.getAllByFactura(idFactura, PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@GetMapping(path = "/detalle/search/servicio/{servicio_id}/page/{page_num}")
-	public ResponseEntity<FacturaVentaDetalleResult> getAllByIdServicio(
-			@PathVariable(value = "servicio_id") final Integer idServicio,
+	public FacturaVentaDetalleResult getAllByIdServicio(@PathVariable(value = "servicio_id") final Integer idServicio,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity
-					.ok(facturaVentaDetalleService.getAllByServicio(idServicio, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaVentaDetalleService.getAllByServicio(idServicio, PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@GetMapping(path = "/detalle/page/{page_num}")
-	public ResponseEntity<FacturaVentaDetalleResult> getAll(@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(facturaVentaDetalleService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+	public FacturaVentaDetalleResult getAll(@PathVariable(value = "page_num") final Integer pageNum) {
+		return facturaVentaDetalleService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/detalle/{id}")

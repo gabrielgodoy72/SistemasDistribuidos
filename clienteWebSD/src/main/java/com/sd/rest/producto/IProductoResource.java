@@ -8,4 +8,6 @@ public interface IProductoResource extends IBaseResource<ProductoDTO> {
 
     public ProductoResult getAll(Integer page);
 
+    //public ProductoDTO update(Integer id, ProductoDTO dto);
+
 }

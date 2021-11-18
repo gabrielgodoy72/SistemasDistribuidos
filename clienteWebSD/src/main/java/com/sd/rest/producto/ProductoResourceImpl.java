@@ -17,5 +17,11 @@ public class ProductoResourceImpl extends BaseResourceImpl<ProductoDTO> implemen
         final ProductoResult result = getWebResource().path("/productos/page/" + page).get(ProductoResult.class);
         return result;
     }
+/*
+    @Override
+    public ProductoDTO update(Integer id, ProductoDTO dto) {
+        return getWebResource().path("/producto/" + id).entity(dto).put(ProductoDTO.class);
+    }
+*/
 
 }

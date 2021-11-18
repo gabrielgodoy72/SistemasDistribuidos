@@ -45,8 +45,8 @@ public abstract class BaseResourceImpl<DTO extends BaseDTO> implements IBaseReso
     }
 
     @Override
-    public DTO update(DTO dto, String path) {
-        return getWebResource().path("/" + path).entity(dto).put(getDtoClass());
+    public DTO update(Integer id, DTO dto, String path) {
+        return getWebResource().path("/" + path + "/" + id).entity(dto).put(getDtoClass());
     }
 
 }

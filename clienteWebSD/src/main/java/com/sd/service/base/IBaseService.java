@@ -15,6 +15,6 @@ public interface IBaseService<BEAN extends BaseBean, DTO extends BaseDTO> {
 
     public void delete(Integer id);
 
-    public BEAN update(BEAN bean);
+    public BEAN update(Integer id, BEAN bean);
 
 }

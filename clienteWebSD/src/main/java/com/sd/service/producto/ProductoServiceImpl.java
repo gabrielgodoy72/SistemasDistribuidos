@@ -42,8 +42,8 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
     }
 
     @Override
-    public ProductoB update(ProductoB bean) {
-        return convertDtoToBean(productoResource.update(convertBeanToDto(bean), "producto"));
+    public ProductoB update(Integer id, ProductoB bean) {
+        return convertDtoToBean(productoResource.update(id, convertBeanToDto(bean), "producto"));
     }
 
     @Override
