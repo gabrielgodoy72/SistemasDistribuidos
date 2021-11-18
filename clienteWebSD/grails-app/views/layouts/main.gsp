@@ -29,10 +29,10 @@
         </ul>
     </div>
 </nav>-->
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-expand-lg bg-primary" >
     <div class="container-fluid">
         <a class="navbar-brand text-primary" href="/">
-            <span class="text-primary">HOME</span>
+            <span class="text-dark font-weight-bold">HOME</span>
         </a>
         <div class="collapse navbar-collapse mx-5" id="navbarNavDropdown">
             <ul class="navbar-nav">
@@ -60,8 +60,10 @@
         </div>
     </div>
 </nav>
+<div class="contenedor">
+    <g:layoutBody/>
+</div>
 
-<g:layoutBody/>
 
 
 <div id="spinner" class="spinner" style="display:none;">

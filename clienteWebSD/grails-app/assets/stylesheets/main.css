@@ -132,7 +132,7 @@ img {
 /* NAVIGATION MENU */
 
 .nav {
-    zoom: 1;
+    margin-top: 10px;
 }
 
 .nav ul {
