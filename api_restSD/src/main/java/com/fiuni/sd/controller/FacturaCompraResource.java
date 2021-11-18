@@ -56,26 +56,17 @@ public class FacturaCompraResource {
 	}
 
 	@GetMapping(path = "/compra/search/date/{fecha}/page/{page_num}")
-	public ResponseEntity<FacturaCompraResult> getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
+	public FacturaCompraResult getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity
-					.ok(facturaCompraService.getAllByFecha(fecha, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaCompraService.getAllByFecha(fecha, PageRequest.of(pageNum, Setting.PAGE_SIZE));
+
 	}
 
 	@GetMapping(path = "/compra/search/proveedor/{idProveedor}/page/{page_num}")
-	public ResponseEntity<FacturaCompraResult> getAllByIdProveedor(
-			@PathVariable(value = "idProveedor") final Integer idProveedor,
+	public FacturaCompraResult getAllByIdProveedor(@PathVariable(value = "idProveedor") final Integer idProveedor,
 			@PathVariable(value = "page_num") final Integer pageNum) {
-		try {
-			return ResponseEntity.ok(
-					facturaCompraService.getAllByProveedor(idProveedor, PageRequest.of(pageNum, Setting.PAGE_SIZE)));
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+		return facturaCompraService.getAllByProveedor(idProveedor, PageRequest.of(pageNum, Setting.PAGE_SIZE));
+
 	}
 
 	@GetMapping(path = "/compra/page/{page_num}")

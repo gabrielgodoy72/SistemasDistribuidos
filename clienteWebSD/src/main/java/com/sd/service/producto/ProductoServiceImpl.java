@@ -28,6 +28,9 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
     @Override
     public List<ProductoB> getAll(Integer page) {
         final ProductoResult result = productoResource.getAll(page);
+        if(result.getProductos() == null) {
+            return Collections.emptyList();
+        }
         return result.getProductos().stream().map(this::convertDtoToBean).collect(Collectors.toList());
     }
 

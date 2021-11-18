@@ -25,6 +25,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     @Override
     public List<UsuarioB> getAll(Integer page) {
         final UsuarioResult result = usuarioResource.getAll(page);
+        if(result.getUsers() == null) {
+            return Collections.emptyList();
+        }
         return result.getUsers().stream().map(this::convertDtoToBean).collect(Collectors.toList());
     }
 
