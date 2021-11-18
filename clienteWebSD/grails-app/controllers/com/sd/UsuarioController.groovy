@@ -42,6 +42,21 @@ class UsuarioController {
         redirect(action: "list")
     }
 
+    def update() {
+        def usuarioInstance = new UsuarioB(params)
+        def newUsuario = usuarioService.save(usuarioInstance)
+        if (!newUsuario?.getId()) {
+            render(view: "create", model: [usuarioInstance: usuarioInstance])
+            return
+        }
+
+        flash.message = message(code: 'default.updated.message', args: [
+                message(code: 'usuario.label', default: 'Usuario'),
+                newUsuario.getId()
+        ])
+        redirect(action: "list")
+    }
+
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
         def usuarioInstance = usuarioService.getById(id.toInteger())
@@ -74,11 +89,13 @@ class UsuarioController {
             redirect(action: "list")
             return
         }
-        //try {
-            usuarioService.delete(id)
-       // } catch (Exception e){
-        //    redirect(action: "notFound")
-        //}
+
+        usuarioService.delete(id)
+
+        flash.message = message(code: 'default.deleted.message', args: [
+                message(code: 'usuario.label', default: 'Usuario'),
+                id
+        ])
         redirect(action: "list")
     }
 

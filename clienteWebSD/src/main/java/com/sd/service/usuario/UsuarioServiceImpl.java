@@ -39,6 +39,11 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
+    public UsuarioB update(UsuarioB bean) {
+        return convertDtoToBean(usuarioResource.update(convertBeanToDto(bean), "usuario"));
+    }
+
+    @Override
     protected UsuarioB convertDtoToBean(UsuarioDTO dto) {
         final Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(dto.getId()));

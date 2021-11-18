@@ -3,7 +3,6 @@ package com.sd.rest.base;
 import com.fiuni.sd.dto.base.BaseDTO;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import grails.web.http.HttpHeaders;
 
 public abstract class BaseResourceImpl<DTO extends BaseDTO> implements IBaseResource<DTO> {
     private final String _resourcePath;
@@ -44,4 +43,10 @@ public abstract class BaseResourceImpl<DTO extends BaseDTO> implements IBaseReso
     public void delete(Integer id, String path) {
         getWebResource().path("/"  + path + "/"  + id).delete();
     }
+
+    @Override
+    public DTO update(DTO dto, String path) {
+        return getWebResource().path("/" + path).entity(dto).put(getDtoClass());
+    }
+
 }
