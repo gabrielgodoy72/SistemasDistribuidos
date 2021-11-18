@@ -18,7 +18,12 @@ class UsuarioController {
 
     def list(Integer id) {
         def page = Math.max(id?:0,0)
-        def usuarios = usuarioService.getAll(page)
+        def usuarios
+        try {
+            usuarios = usuarioService.getAll(page)
+        } catch (Exception ex) {
+            usuarios = new ArrayList<UsuarioB>()
+        }
 
         [usuarioInstanceList: usuarios, usuarioIntanceTotal: usuarios.size()]
     }

@@ -19,7 +19,12 @@ class ProductoController {
 
     def list(Integer id) {
         def page = Math.max(id?:0,0)
-        def productos = productoService.getAll(page)
+        def productos
+        try {
+            productos = productoService.getAll(page)
+        } catch (Exception ex) {
+            productos = new ArrayList<ProductoB>()
+        }
 
         [productoInstanceList: productos, productoIntanceTotal: productos.size()]
     }
