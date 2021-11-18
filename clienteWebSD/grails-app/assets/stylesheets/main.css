@@ -46,6 +46,10 @@ body {
     background-color: #feb672;
 }
 
+a {
+    text-decoration: none;
+}
+
 a:hover, a:active {
     outline: none; /* prevents outline in webkit on active links but retains it for tab focus */
 }
