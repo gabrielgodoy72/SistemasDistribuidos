@@ -1,6 +1,5 @@
 package com.fiuni.sd.domain.producto;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;

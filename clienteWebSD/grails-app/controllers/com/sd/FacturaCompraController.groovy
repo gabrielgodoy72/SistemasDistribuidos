@@ -2,10 +2,14 @@ package com.sd
 
 import com.sd.beans.facturaCompra.FacturaCompraB
 import com.sd.beans.proveedor.ProveedorB
+import com.sd.beans.usuario.UsuarioB
 import com.sd.service.facturaCompra.IFacturaCompraService
 import com.sd.service.proveedor.IProveedorService
 import com.sun.jersey.api.client.Client
 import grails.validation.ValidationException
+
+import java.text.SimpleDateFormat
+
 import static org.springframework.http.HttpStatus.*
 
 class FacturaCompraController {
@@ -24,21 +28,22 @@ class FacturaCompraController {
         def page = Math.max(id?:0,0)
         def facturasCompra = facturaCompraService.getAll(page)
 
-        [facturaCompraInstanceList: facturasCompra, facturaCompraIntanceTotal: facturasCompra.size()]
+        [facturaCompraInstanceList: facturasCompra.getList(), facturaCompraIntanceTotal: facturasCompra.getTotal(),
+         totalPages:facturasCompra.getTotalPages(), currentPage:facturasCompra.getPage()]
     }
 
     def create() {
-        def proveedores
-        try {
-            proveedores = proveedorService.getAll(0)
-        } catch (Exception ex) {
-            proveedores = new ArrayList<ProveedorB>()
-        }
-        [facturaCompraInstance: new FacturaCompraB(params), proveedores: proveedores]
+        def proveedores = proveedorService.getAll(0)
+        [facturaCompraInstance: new FacturaCompraB(params), proveedores: proveedores.getList()]
     }
 
     def save() {
         def facturaCompraInstance = new FacturaCompraB(params)
+        //String sDate1="${params.fecha_day}-${params.fecha_month}-${params.fecha_year}";
+        Date date1 = new Date(Integer.parseInt(params.fecha_year) - 1900, Integer.parseInt(params.fecha_month), Integer.parseInt(params.fecha_day));
+        System.out.println("DATEEEEE "+"\t"+date1.toLocaleString());
+       // System.out.println("FECHA: " + new Date(""))
+        //facturaCompraInstance.setFecha()
         facturaCompraInstance.setProveedor(proveedorService.getById(Integer.valueOf(params.proveedorId)))
         def newFacturaCompra = facturaCompraService.save(facturaCompraInstance)
         if (!newFacturaCompra?.getId()) {
@@ -54,14 +59,23 @@ class FacturaCompraController {
 
     }
 
-    def update() {
+    def update(Integer id) {
         def facturaCompraInstance = new FacturaCompraB(params)
-        def newFacturaCompra = facturaCompraService.update(facturaCompraInstance)
+        //facturaCompraInstance.setFecha(new Date("${params.fecha_year}-${params.fecha_month}-${params.fecha_day}"))
+        facturaCompraInstance.setProveedor(proveedorService.getById(Integer.valueOf(params.proveedorId)))
+        if (id != facturaCompraInstance.getId()) {
+            flash.message = message(code: 'default.not.equal.message', args: [
+                    message(code: 'facturaCompra.label', default: 'Factura Compra'),
+                    id
+            ])
+        }
+
+        def newFacturaCompra = facturaCompraService.update(id, facturaCompraInstance)
         if (!newFacturaCompra?.getId()) {
             render(view: "create", model: [facturaCompraInstance: facturaCompraInstance])
             return
         }
-        System.out.println("Hola Mundo");
+
         flash.message = message(code: 'default.updated.message', args: [
                 message(code: 'facturaCompra.label', default: 'Factura Compra'),
                 newFacturaCompra.getId()
@@ -72,12 +86,14 @@ class FacturaCompraController {
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
         def facturaCompraInstance = facturaCompraService.getById(id.toInteger())
-        [facturaCompraInstance: facturaCompraInstance]
+        System.out.println("FECHA: " + params.fecha + " " + params['fecha'])
+        [facturaCompraInstance: facturaCompraInstance, proveedores:facturaCompraInstance.getProveedor()]
     }
 
     def edit() {
         def id = Integer.valueOf(params['id'])
         def facturaCompraInstance = facturaCompraService.getById(id.toInteger())
+        def proveedores = proveedorService.getAll(0)
         if (!facturaCompraInstance) {
             flash.message = message(code: 'default.not.found.message', args: [
                     message(code: 'facturaCompra.label', default: 'Factura Compra'),
@@ -87,14 +103,8 @@ class FacturaCompraController {
             return
         }
 
-        def proveedores
-        try {
-            proveedores = proveedorService.getAll(page)
-        } catch (Exception ex) {
-            proveedores = new ArrayList<ProveedorB>()
-        }
 
-        [facturaCompraInstance: facturaCompraInstance, proveedores: proveedores]
+        [facturaCompraInstance: facturaCompraInstance, proveedores: proveedores.getList()]
     }
 
     def delete() {

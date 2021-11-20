@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.pedido;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +40,13 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 	@Override
 	public PedidoResult getAll(final Pageable pageable) {
 		final PedidoResult result = new PedidoResult();
-		result.setPedidos(pedidoDao.findAll(pageable)//
+		Page<PedidoDomain> pages = pedidoDao.findAll(pageable);
+		result.setPedidos(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
@@ -65,9 +72,13 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 	@Override
 	public PedidoResult getAllByCliente(final Integer idCliente, final Pageable pageable) {
 		final PedidoResult result = new PedidoResult();
-		result.setPedidos(pedidoDao.findAllByCliente(idCliente, pageable)//
+		Page<PedidoDomain> pages = pedidoDao.findAllByCliente(idCliente, pageable);
+		result.setPedidos(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

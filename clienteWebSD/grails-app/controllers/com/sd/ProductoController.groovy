@@ -16,11 +16,21 @@ class ProductoController {
         redirect(action: "list", params: params)
     }
 
-    def list(Integer id) {
-        def page = Math.max(id?:0,0)
-        def productos = productoService.getAll(page)
+    def paginate(Integer page){
+        def id = Integer.valueOf(params['id'])
+        System.out.println(id)
 
-        [productoInstanceList: productos, productoIntanceTotal: productos.size()]
+    }
+
+    def list(Integer id) {
+        def params = params.toString()
+        def page = Math.max(id?:1,0)
+        def productos = productoService.getAll(page)
+        System.out.println("PARAMS: " + params)
+        System.out.println("total pages: " + productos.getTotalPages())
+        [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal(),
+        totalPages:productos.getTotalPages(), currentPage:productos.getPage(),
+        nextPage:productos.getNextPage(), prevPage:productos.getPrevPage()]
     }
 
     def create() {

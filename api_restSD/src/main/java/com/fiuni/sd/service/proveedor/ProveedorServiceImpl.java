@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.proveedor;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +50,13 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	@Override
 	public ProveedorResult getAll(Pageable pageable) {
 		final ProveedorResult result = new ProveedorResult();
-		result.setProveedores(proveedorDao.findAll(pageable)//
+		Page<ProveedorDomain> pages = proveedorDao.findAll(pageable);
+		result.setProveedores(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

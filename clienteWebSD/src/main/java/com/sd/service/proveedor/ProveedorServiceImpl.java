@@ -2,8 +2,11 @@ package com.sd.service.proveedor;
 
 import com.fiuni.sd.dto.proveedor.ProveedorDTO;
 import com.fiuni.sd.dto.proveedor.ProveedorResult;
+import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.sd.beans.producto.ProductoB;
 import com.sd.beans.proveedor.ProveedorB;
+import com.sd.beans.proveedor.ProveedorBResult;
+import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.proveedor.IProveedorResource;
 import com.sd.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +28,18 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
     }
 
     @Override
-    public List<ProveedorB> getAll(Integer page) {
+    public ProveedorBResult getAll(Integer page) {
+        final ProveedorBResult proveedorB = new ProveedorBResult();
         final ProveedorResult result = proveedorResource.getAll(page);
-        if(result.getProveedores() == null){
-            return Collections.emptyList();
+        if(result.getProveedores() == null) {
+            proveedorB.setProveedores(Collections.emptyList());
+        } else {
+            proveedorB.setProveedores(result.getProveedores().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
+            proveedorB.setPage(result.getPage());
+            proveedorB.setTotalPages(result.getTotalPages());
+            proveedorB.setTotal(result.getTotal());
         }
-        return result.getProveedores().stream().map(this::convertDtoToBean).collect(Collectors.toList());
+        return proveedorB;
     }
 
     @Override

@@ -35,34 +35,49 @@
             <tr>
                 <td><h6>${fieldValue(bean: productoInstance, field: "descripcion")}</h6></td>
                 <td><h6>${fieldValue(bean: productoInstance, field: "costo")}</h6></td>
-                <td><h6><g:link class="edit" action="show" id="${productoInstance?.id}">
-                    <button class="btn btn-outline-info btn-sm">Ver</button>
-                </g:link></h6></td>
+                <td>
+                    <div class="btn-group">
+                        <g:link controller="producto" class="btn btn-secondary" action="show" id="${productoInstance?.id}">Ver</g:link>
+                        <g:link controller="producto" class="btn btn-secondary" action="edit" id="${productoInstance?.id}">Editar</g:link>
+                        <g:link controller="producto" class="btn btn-secondary" action="delete" id="${productoInstance?.id}">Eliminar</g:link>
+                    </div>
+                </td>
             </tr>
         </g:each>
         </tbody>
+
     </table>
-
-    <div class="pagination">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+    <!-- Pagination section -->
+    <div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <!-- aqui se inserta por js los li -->
+            <g:each in="${Arrays.asList(totalPages)}" status="i" var="page">
+                <li class=`page-item ${page==currentPage?active:""}` >
+                    <g:link controller="producto" class="page-link" action="list" params="${i}" id="${i}">${i}</g:link>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            </g:each>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     </div>
-
 </div>
+<script>
+    for(int i = 0; i < ){
+        var li = `<li class="page-item ${page==currentPage?active:""}" ><g:link controller="producto" class="page-link" action="list" params="${i}" id="${i}">${i}</g:link></li>`
+        document.getElementById("pagination").insertAdjacentHTML("beforeend", li)
+    }
+</script>
 </body>
 </html>

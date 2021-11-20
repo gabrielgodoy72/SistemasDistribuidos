@@ -1,4 +1,3 @@
-
 <div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'numero', 'error')} required">
 	<label for="numero">
 		<g:message code="facturaCompra.numero.label" default="Número de Factura" />
@@ -12,7 +11,9 @@
 		<g:message code="facturaCompra.fecha.label" default="Fecha" />
 		<span class="required-indicator">*</span>
 	</label>
-	<input type="text" id="fecha" name="fecha" value="${formatDate(format:'dd-MM-yyyy',date: facturaCompraInstance?.fecha)}" />
+	<g:datePicker  id="fecha" name="fecha" precision="day"
+				   value="${facturaCompraInstance?.fecha}"
+				   years="[2020, 2021, 2022, 2023]" ></g:datePicker >
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'proveedor', 'error')} required">

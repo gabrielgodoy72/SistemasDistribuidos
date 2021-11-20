@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.cliente;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +36,13 @@ public class ClienteServiceImpl extends BaseServiceImpl<ClienteDTO, ClienteDomai
 	@Override
 	public ClienteResult getAll(final Pageable pageable) {
 		final ClienteResult result = new ClienteResult();
-		result.setClientes(clientDao.findAll(pageable)//
+		Page<ClienteDomain> pages = clientDao.findAll(pageable);
+		result.setClientes(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

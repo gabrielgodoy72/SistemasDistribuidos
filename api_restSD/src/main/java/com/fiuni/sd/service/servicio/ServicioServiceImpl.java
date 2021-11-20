@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.servicio;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +43,13 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 	@Override
 	public ServicioResult getAll(final Pageable pageable) {
 		final ServicioResult result = new ServicioResult();
-		result.setServicios(repository.findAll(pageable)//
+		Page<ServicioDomain> pages = repository.findAll(pageable);
+		result.setServicios(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

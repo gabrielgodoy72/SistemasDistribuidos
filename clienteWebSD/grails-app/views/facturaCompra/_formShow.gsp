@@ -10,19 +10,21 @@
 	<label for="fecha">
 		<g:message code="facturaCompra.fecha.label" default="Fecha" />
 	</label>
-	<g:textField name="fecha" maxlength="50" required="" value="${facturaCompraInstance?.ruc}"/>
+	<g:datePicker  id="fecha" name="fecha" precision="day"
+				   value="${facturaCompraInstance?.fecha}"
+				   years="[2020, 2021, 2022, 2023]" ></g:datePicker >
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'total', 'error')} required">
 	<label for="total">
 		<g:message code="facturaCompra.telefono.label" default="Total" />
 	</label>
-	<g:textField name="total" maxlength="50" required="" value="${facturaCompraInstance?.telefono}"/>
+	<g:textField name="total" value="${facturaCompraInstance?.total}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'proveedor.id"', 'error')} required">
-	<label for="proveedor.id">
-		<g:message code="facturaCompra.proveedor.id.label" default="Id del Proveedor" />
+	<label for="proveedor">
+		<g:message code="facturaCompra.proveedor.id.label" default="Proveedor" />
 	</label>
-	<g:textField type="proveedor.id" name="proveedor.id" maxlength="50" required="" value="${facturaCompraInstance?.direccion}"/>
+	<g:select id="proveedor" name="proveedorId" from="${proveedores}" optionKey="id" optionValue="nombre" required="" value="${facturaCompraInstance?.proveedor?.id}" class="many-to-one"/>
 </div>

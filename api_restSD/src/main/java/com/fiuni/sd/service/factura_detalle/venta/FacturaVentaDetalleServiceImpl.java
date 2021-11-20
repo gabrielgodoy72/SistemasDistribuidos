@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.factura_detalle.venta;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -42,27 +45,40 @@ public class FacturaVentaDetalleServiceImpl
 	@Override
 	public FacturaVentaDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable) {
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		result.setFacturasVentaDetalle(repository.findAllByFactura(idFactura, pageable)//
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByFactura(idFactura, pageable);
+		result.setFacturasVentaDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public FacturaVentaDetalleResult getAllByServicio(final Integer idServicio, final Pageable pageable) {
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		result.setFacturasVentaDetalle(repository.findAllByServicio(idServicio, pageable)//
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByServicio(idServicio, pageable);
+		result.setFacturasVentaDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
+
 	}
 
 	@Override
 	public FacturaVentaDetalleResult getAll(final Pageable pageable) {
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		result.setFacturasVentaDetalle(repository.findAll(pageable)//
+		Page<FacturaVentaDetalleDomain> pages = repository.findAll(pageable);
+		result.setFacturasVentaDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

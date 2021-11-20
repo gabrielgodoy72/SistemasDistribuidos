@@ -56,7 +56,7 @@ public class ProductoResource {
 
 	@GetMapping(path = "/productos/page/{page_num}")
 	public ProductoResult getProductos(@PathVariable(value = "page_num") Integer pageNum) {
-		return productoService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
+		return productoService.getAll(PageRequest.of(pageNum - 1, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/producto/{id}")
@@ -70,4 +70,5 @@ public class ProductoResource {
 		productoService.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
+	
 }

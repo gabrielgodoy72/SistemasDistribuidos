@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.factura_detalle.compra;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -42,27 +45,39 @@ public class FacturaCompraDetalleServiceImpl
 	@Override
 	public FacturaCompraDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable) {
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
-		result.setFacturasCompraDetalle(facturaCompraDetalleRepository.findAllByFactura(idFactura, pageable)//
+		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository.findAllByFactura(idFactura, pageable);
+		result.setFacturasCompraDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public FacturaCompraDetalleResult getAllByProducto(final Integer idProducto, final Pageable pageable) {
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
-		result.setFacturasCompraDetalle(facturaCompraDetalleRepository.findAllByProducto(idProducto, pageable)//
+		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository.findAllByProducto(idProducto, pageable);
+		result.setFacturasCompraDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public FacturaCompraDetalleResult getAll(final Pageable pageable) {
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
-		result.setFacturasCompraDetalle(facturaCompraDetalleRepository.findAll(pageable)//
+		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository.findAll(pageable);
+		result.setFacturasCompraDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

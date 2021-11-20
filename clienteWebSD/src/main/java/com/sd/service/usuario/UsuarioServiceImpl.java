@@ -3,6 +3,7 @@ package com.sd.service.usuario;
 import com.fiuni.sd.dto.usuario.UsuarioDTO;
 import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.sd.beans.usuario.UsuarioB;
+import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.usuario.IUsuarioResource;
 import com.sd.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,18 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
-    public List<UsuarioB> getAll(Integer page) {
+    public UsuarioBResult getAll(Integer page) {
+        final UsuarioBResult usuarioB = new UsuarioBResult();
         final UsuarioResult result = usuarioResource.getAll(page);
         if(result.getUsers() == null) {
-            return Collections.emptyList();
+            usuarioB.setUsuarios(Collections.emptyList());
+        } else {
+            usuarioB.setUsuarios(result.getUsers().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
+            usuarioB.setPage(result.getPage());
+            usuarioB.setTotalPages(result.getTotalPages());
+            usuarioB.setTotal(result.getTotal());
         }
-        return result.getUsers().stream().map(this::convertDtoToBean).collect(Collectors.toList());
+        return usuarioB;
     }
 
     @Override

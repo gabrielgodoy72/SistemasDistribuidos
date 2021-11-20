@@ -1,6 +1,9 @@
 package com.fiuni.sd.service.producto;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +36,13 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 	@Override
 	public ProductoResult getAll(final Pageable pageable) {
 		final ProductoResult result = new ProductoResult();
-		result.setProductos(productoDao.findAll(pageable)//
+		Page<ProductoDomain> pages = productoDao.findAll(pageable);
+		result.setProductos(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

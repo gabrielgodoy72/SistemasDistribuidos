@@ -14,7 +14,7 @@ public class FacturaCompraB extends BaseBean {
     private static final long serialVersionUID = 1L;
     private Date fecha;
     private String numero;
-    private Double total;
+    private Double total = 0.0;
     private ProveedorB proveedor;
 
     public FacturaCompraB(Map<String, String> params) { super(params); }

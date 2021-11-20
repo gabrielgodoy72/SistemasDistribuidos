@@ -3,6 +3,7 @@ package com.sd.service.producto;
 import com.fiuni.sd.dto.producto.ProductoDTO;
 import com.fiuni.sd.dto.producto.ProductoResult;
 import com.sd.beans.producto.ProductoB;
+import com.sd.beans.producto.ProductoBResult;
 import com.sd.rest.producto.IProductoResource;
 import com.sd.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,18 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
     }
 
     @Override
-    public List<ProductoB> getAll(Integer page) {
+    public ProductoBResult getAll(Integer page) {
+        final ProductoBResult productosB = new ProductoBResult();
         final ProductoResult result = productoResource.getAll(page);
         if(result.getProductos() == null) {
-            return Collections.emptyList();
+            productosB.setProductos(Collections.emptyList());
+        } else {
+            productosB.setProductos(result.getProductos().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
+            productosB.setPage(result.getPage());
+            productosB.setTotalPages(result.getTotalPages());
+            productosB.setTotal(result.getTotal());
         }
-        return result.getProductos().stream().map(this::convertDtoToBean).collect(Collectors.toList());
+        return productosB;
     }
 
     @Override

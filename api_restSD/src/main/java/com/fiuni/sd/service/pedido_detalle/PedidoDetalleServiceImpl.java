@@ -1,8 +1,10 @@
 package com.fiuni.sd.service.pedido_detalle;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -43,36 +45,52 @@ public class PedidoDetalleServiceImpl extends
 	@Override
 	public PedidoDetalleResult getAllByPedido(final Integer idPedido, final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		result.setPedidosDetalle(repository.findAllByPedido(idPedido, pageable)//
+		Page<PedidoDetalleDomain> pages = repository.findAllByPedido(idPedido, pageable);
+		result.setPedidosDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public PedidoDetalleResult getAllByServicio(final Integer idServicio, final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		result.setPedidosDetalle(repository.findAllByServicio(idServicio, pageable)//
+		Page<PedidoDetalleDomain> pages = repository.findAllByServicio(idServicio, pageable);
+		result.setPedidosDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public PedidoDetalleResult getAllByFecha(final Date fecha, final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		result.setPedidosDetalle(repository.findAllByFecha(fecha, pageable)//
+		Page<PedidoDetalleDomain> pages = repository.findAllByFecha(fecha, pageable);
+		result.setPedidosDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public PedidoDetalleResult getAll(final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		result.setPedidosDetalle(repository.findAll(pageable)//
+		Page<PedidoDetalleDomain> pages = repository.findAll(pageable);
+		result.setPedidosDetalle(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

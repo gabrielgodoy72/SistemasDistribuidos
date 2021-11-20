@@ -1,8 +1,10 @@
 package com.fiuni.sd.service.usuario;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,9 +60,13 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	@Override
 	public UsuarioResult getAll(final Pageable pageable) {
 		final UsuarioResult result = new UsuarioResult();
-		result.setUsers(userDao.findAll(pageable)//
+		Page<UsuarioDomain> pages = userDao.findAll(pageable);
+		result.setUsers(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 

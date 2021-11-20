@@ -4,7 +4,10 @@ import com.fiuni.sd.dto.factura.compra.FacturaCompraDTO;
 import com.fiuni.sd.dto.factura.compra.FacturaCompraResult;
 import com.fiuni.sd.dto.proveedor.ProveedorDTO;
 import com.fiuni.sd.dto.proveedor.ProveedorResult;
+import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.sd.beans.facturaCompra.FacturaCompraB;
+import com.sd.beans.facturaCompra.FacturaCompraBResult;
+import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.facturaCompra.IFacturaCompraResource;
 import com.sd.rest.proveedor.IProveedorResource;
 import com.sd.service.base.BaseServiceImpl;
@@ -26,31 +29,37 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
     @Override
     public FacturaCompraB save(FacturaCompraB bean) {
         bean.setId(0);
-        return convertDtoToBean(facturaCompraResource.save(convertBeanToDto(bean), "/compra"));
+        return convertDtoToBean(facturaCompraResource.save(convertBeanToDto(bean), "compra"));
     }
 
     @Override
-    public List<FacturaCompraB> getAll(Integer page) {
+    public FacturaCompraBResult getAll(Integer page) {
+        final FacturaCompraBResult FacturaCompraB = new FacturaCompraBResult();
         final FacturaCompraResult result = facturaCompraResource.getAll(page);
-        if(result.getFacturaCompra() == null){
-            return Collections.emptyList();
+        if(result.getFacturasCompra() == null) {
+            FacturaCompraB.setFacturaCompra(Collections.emptyList());
+        } else {
+            FacturaCompraB.setFacturaCompra(result.getFacturasCompra().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
+            FacturaCompraB.setPage(result.getPage());
+            FacturaCompraB.setTotalPages(result.getTotalPages());
+            FacturaCompraB.setTotal(result.getTotal());
         }
-        return result.getFacturaCompra().stream().map(this::convertDtoToBean).collect(Collectors.toList());
+        return FacturaCompraB;
     }
 
     @Override
     public FacturaCompraB getById(Integer id) {
-        return convertDtoToBean(facturaCompraResource.getById(id, "/compra"));
+        return convertDtoToBean(facturaCompraResource.getById(id, "compra"));
     }
 
     @Override
     public void delete(Integer id) {
-        facturaCompraResource.delete(id, "/compra");
+        facturaCompraResource.delete(id, "compra");
     }
 
     @Override
     public FacturaCompraB update(Integer id, FacturaCompraB bean) {
-        return convertDtoToBean(facturaCompraResource.update(id, convertBeanToDto(bean), "/compra"));
+        return convertDtoToBean(facturaCompraResource.update(id, convertBeanToDto(bean), "compra"));
     }
 
     @Override
@@ -58,6 +67,7 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
         final Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(dto.getId()));
         params.put("numero", String.valueOf(dto.getNumero()));
+        params.put("total", String.valueOf(dto.getTotal()));
         FacturaCompraB factura = new FacturaCompraB(params);
         factura.setProveedor(proveedorService.getById(dto.getProveedor_id()));
         factura.setFecha(dto.getFecha());

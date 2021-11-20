@@ -1,8 +1,10 @@
 package com.fiuni.sd.service.factura.compra;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +41,13 @@ public class FacturaCompraServiceImpl extends
 	@Override
 	public FacturaCompraResult getAllByFecha(Date fecha, Pageable pageable) {
 		final FacturaCompraResult result = new FacturaCompraResult();
-		result.setFacturasCompra(repository.findAllByFecha(fecha, pageable)//
+		Page<FacturaCompraDomain> pages = repository.findAllByFecha(fecha, pageable);
+		result.setFacturasCompra(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
@@ -55,18 +61,26 @@ public class FacturaCompraServiceImpl extends
 	@Override
 	public FacturaCompraResult getAllByProveedor(Integer idProveedor, Pageable pageable) {
 		final FacturaCompraResult result = new FacturaCompraResult();
-		result.setFacturasCompra(repository.findAllByProveedor(idProveedor, pageable)//
+		Page<FacturaCompraDomain> pages = repository.findAllByProveedor(idProveedor, pageable);
+		result.setFacturasCompra(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
 	public FacturaCompraResult getAll(Pageable pageable) {
 		final FacturaCompraResult result = new FacturaCompraResult();
-		result.setFacturasCompra(repository.findAll(pageable)//
+		Page<FacturaCompraDomain> pages = repository.findAll(pageable);
+		result.setFacturasCompra(pages.getContent()//
+				.stream()//
 				.map(this::convertDomainToDto)//
-				.toList());
+				.collect(Collectors.toList()));
+		result.setPage(pages.getNumber());
+		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
