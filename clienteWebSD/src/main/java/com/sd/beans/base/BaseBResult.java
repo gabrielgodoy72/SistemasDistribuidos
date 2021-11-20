@@ -12,7 +12,7 @@ public abstract class BaseBResult<BEAN extends BaseBean> implements Serializable
     private List<BEAN> _beans;
     private Integer total;
     private Integer totalPages;
-    private Integer page;
+    private Integer page = 0;
 
     public BaseBResult() {
     }

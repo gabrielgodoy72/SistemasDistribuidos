@@ -8,16 +8,13 @@
     <title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-<a href="#list-producto" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-<div class="nav" role="navigation">
-    <ul>
-        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-        <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-    </ul>
-</div>
-
-<div id="list-producto" class="" role="main">
-    <h1><g:message code="default.list.label" args="[entityName]" /></h1>
+<div id="list-producto" class="pt-3" role="main">
+    <div class="d-flex justify-content-between">
+        <h1>Lista de Productos</h1>
+        <div class="pt-3">
+            <g:link controller="producto" class="btn btn-primary" action="create">Nuevo Producto</g:link>
+        </div>
+    </div>
     <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
     </g:if>
@@ -36,10 +33,16 @@
                 <td><h6>${fieldValue(bean: productoInstance, field: "descripcion")}</h6></td>
                 <td><h6>${fieldValue(bean: productoInstance, field: "costo")}</h6></td>
                 <td>
-                    <div class="btn-group">
-                        <g:link controller="producto" class="btn btn-secondary" action="show" id="${productoInstance?.id}">Ver</g:link>
-                        <g:link controller="producto" class="btn btn-secondary" action="edit" id="${productoInstance?.id}">Editar</g:link>
-                        <g:link controller="producto" class="btn btn-secondary" action="delete" id="${productoInstance?.id}">Eliminar</g:link>
+                    <div class="d-flex">
+                        <g:link controller="producto" class="btn btn-outline-info" action="show" id="${productoInstance?.id}">Ver</g:link>
+                        <g:link controller="producto" class="btn btn-outline-primary mx-2" action="edit" id="${productoInstance?.id}">Editar</g:link>
+                        <g:form method="delete" >
+                            <g:hiddenField name="id" value="${productoInstance?.id}" />
+                            <fieldset class="">
+                                <g:actionSubmit class="btn btn-outline-danger" action="delete" value="Borrar" formnovalidate="" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                            </fieldset>
+                        </g:form>
+
                     </div>
                 </td>
             </tr>
@@ -48,29 +51,24 @@
 
     </table>
     <!-- Pagination section -->
-    <div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination" id="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <!-- aqui se inserta por js los li -->
-            <g:each in="${Arrays.asList(totalPages)}" status="i" var="page">
-                <li class=`page-item ${page==currentPage?active:""}` >
-                    <g:link controller="producto" class="page-link" action="list" params="${i}" id="${i}">${i}</g:link>
+    <div class="pagination">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-            </g:each>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 <script>

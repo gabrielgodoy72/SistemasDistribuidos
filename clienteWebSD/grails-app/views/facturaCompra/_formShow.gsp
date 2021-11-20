@@ -15,11 +15,11 @@
 				   years="[2020, 2021, 2022, 2023]" ></g:datePicker >
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'total', 'error')} required">
+<div class="fieldcontain d-flex ${hasErrors(bean: facturaCompraInstance, field: 'total', 'error')} required">
 	<label for="total">
 		<g:message code="facturaCompra.telefono.label" default="Total" />
 	</label>
-	<g:textField name="total" value="${facturaCompraInstance?.total}"/>
+		<g:textField disabled="true" name="total" value="${facturaCompraInstance?.total}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: facturaCompraInstance, field: 'proveedor.id"', 'error')} required">

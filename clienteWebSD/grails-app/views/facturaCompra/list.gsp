@@ -8,16 +8,13 @@
     <title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-<a href="#list-facturaCompra" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-<div class="nav" role="navigation">
-    <ul>
-        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-        <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-    </ul>
-</div>
-
-<div id="list-facturaCompra" class="" role="main">
-    <h1>Lista de Facturas de Compra</h1>
+<div id="list-facturaCompra" class="pt-3" role="main">
+    <div class="d-flex justify-content-between">
+        <h1>Lista de Facturas de Compra</h1>
+        <div class="pt-3">
+            <g:link controller="facturaCompra" class="btn btn-primary" action="create">Nueva Factura</g:link>
+        </div>
+    </div>
     <g:if test="${flash.message}">
         <div class="message" role="status">${flash.message}</div>
     </g:if>
@@ -39,9 +36,19 @@
                 <td><h6>${fieldValue(bean: facturaCompraInstance, field: "fecha")}</h6></td>
                 <td><h6>${fieldValue(bean: facturaCompraInstance, field: "total")}</h6></td>
                 <td><h6>${fieldValue(bean: facturaCompraInstance, field: "proveedor.nombre")}</h6></td>
-                <td><h6><g:link class="edit" action="show" id="${facturaCompraInstance?.id}">
-                    <button class="btn btn-outline-info btn-sm">Ver</button>
-                </g:link></h6></td>
+                <td>
+                    <div class="d-flex">
+                        <g:link controller="facturaCompra" class="btn btn-outline-info" action="show" id="${facturaCompraInstance?.id}">Ver</g:link>
+                        <g:link controller="facturaCompra" class="btn btn-outline-primary mx-2" action="edit" id="${facturaCompraInstance?.id}">Editar</g:link>
+                        <g:form method="delete" >
+                            <g:hiddenField name="id" value="${facturaCompraInstance?.id}" />
+                            <fieldset class="">
+                                <g:actionSubmit class="btn btn-outline-danger" action="delete" value="Borrar" formnovalidate="" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                            </fieldset>
+                        </g:form>
+
+                    </div>
+                </td>
             </tr>
         </g:each>
         </tbody>

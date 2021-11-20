@@ -20,9 +20,7 @@ class ProveedorController {
         def page = Math.max(id?:0,0)
         def proveedores = proveedorService.getAll(page)
 
-        [proveedorInstanceList: proveedores.getList(), proveedorIntanceTotal: proveedores.getTotal(),
-         totalPages:proveedores.getTotalPages(), currentPage:proveedores.getPage(),
-         nextPage:proveedores.getNextPage(), prevPage:proveedores.getPrevPage()]
+        [proveedorInstanceList: proveedores.getList(), proveedorIntanceTotal: proveedores.getTotal()]
     }
 
     def create() {

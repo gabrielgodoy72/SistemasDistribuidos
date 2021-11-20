@@ -20,9 +20,7 @@ class UsuarioController {
         def page = Math.max(id?:0,0)
         def usuarios = usuarioService.getAll(page)
 
-        [usuarioInstanceList: usuarios.getList(), usuarioIntanceTotal: usuarios.getTotal(),
-         totalPages:usuarios.getTotalPages(), currentPage:usuarios.getPage(),
-         nextPage:usuarios.getNextPage(), prevPage:usuarios.getPrevPage()]
+        [usuarioInstanceList: usuarios.getList(), usuarioIntanceTotal: usuarios.getTotal()]
     }
 
     def create() {

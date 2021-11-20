@@ -28,9 +28,7 @@ class ProductoController {
         def productos = productoService.getAll(page)
         System.out.println("PARAMS: " + params)
         System.out.println("total pages: " + productos.getTotalPages())
-        [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal(),
-        totalPages:productos.getTotalPages(), currentPage:productos.getPage(),
-        nextPage:productos.getNextPage(), prevPage:productos.getPrevPage()]
+        [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal()]
     }
 
     def create() {
