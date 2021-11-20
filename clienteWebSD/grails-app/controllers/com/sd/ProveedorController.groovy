@@ -66,7 +66,12 @@ class ProveedorController {
 
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
-        def proveedorInstance = proveedorService.getById(id.toInteger())
+        def proveedorInstance
+        try {
+            proveedorInstance = proveedorService.getById(id.toInteger())
+        } catch (Exception ex) {
+            redirect(action: "notFound")
+        }
         [proveedorInstance: proveedorInstance]
     }
 

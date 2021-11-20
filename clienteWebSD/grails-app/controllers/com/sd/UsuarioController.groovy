@@ -66,7 +66,12 @@ class UsuarioController {
 
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
-        def usuarioInstance = usuarioService.getById(id.toInteger())
+        def usuarioInstance
+        try {
+            usuarioInstance = usuarioService.getById(id.toInteger())
+        } catch (Exception ex) {
+            redirect(action: "notFound")
+        }
         [usuarioInstance: usuarioInstance]
     }
 

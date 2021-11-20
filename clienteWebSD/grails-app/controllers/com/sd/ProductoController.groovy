@@ -74,7 +74,12 @@ class ProductoController {
 
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
-        def productoInstance = productoService.getById(id.toInteger())
+        def productoInstance
+        try {
+            productoInstance = productoService.getById(id.toInteger())
+        } catch (Exception ex) {
+            redirect(action: "notFound")
+        }
         [productoInstance: productoInstance]
     }
 

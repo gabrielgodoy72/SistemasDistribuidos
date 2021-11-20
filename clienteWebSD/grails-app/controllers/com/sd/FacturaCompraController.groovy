@@ -81,9 +81,15 @@ class FacturaCompraController {
 
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
-        def facturaCompraInstance = facturaCompraService.getById(id.toInteger())
-        System.out.println("FECHA: " + params.fecha + " " + params['fecha'])
-        [facturaCompraInstance: facturaCompraInstance, proveedores:facturaCompraInstance.getProveedor()]
+        def facturaCompraInstance
+        def proveedor
+        try {
+            facturaCompraInstance = facturaCompraService.getById(id.toInteger())
+            proveedor = facturaCompraInstance.getProveedor()
+        } catch (Exception ex) {
+            redirect(action: "notFound")
+        }
+        [facturaCompraInstance: facturaCompraInstance, proveedores:proveedor]
     }
 
     def edit() {
