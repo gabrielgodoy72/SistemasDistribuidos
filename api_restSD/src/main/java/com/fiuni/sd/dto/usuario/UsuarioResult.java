@@ -18,6 +18,6 @@ public class UsuarioResult extends BaseResult<UsuarioDTO> {
 	}
 
 	public void setUsers(final List<UsuarioDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 }

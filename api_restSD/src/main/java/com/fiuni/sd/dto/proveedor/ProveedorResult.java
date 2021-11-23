@@ -17,7 +17,7 @@ public class ProveedorResult extends BaseResult<ProveedorDTO> {
 	}
 
 	public void setProveedores(List<ProveedorDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 
 }

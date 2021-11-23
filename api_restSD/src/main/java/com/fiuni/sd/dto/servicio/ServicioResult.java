@@ -17,7 +17,7 @@ public class ServicioResult extends BaseResult<ServicioDTO> {
 	}
 
 	public void setServicios(List<ServicioDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 
 }

@@ -18,6 +18,6 @@ public class FacturaCompraDetalleResult extends BaseResult<FacturaCompraDetalleD
 	}
 
 	public void setFacturasCompraDetalle(List<FacturaCompraDetalleDTO> dtos) {
-		setFacturasCompraDetalle(dtos);
+		setList(dtos);
 	}
 }

@@ -18,7 +18,7 @@ public class PedidoResult extends BaseResult<PedidoDTO> {
 	}
 
 	public void setPedidos(List<PedidoDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 
 }

@@ -18,7 +18,7 @@ public class ClienteResult extends BaseResult<ClienteDTO> {
 	}
 
 	public void setClientes(List<ClienteDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 
 }

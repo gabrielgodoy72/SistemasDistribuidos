@@ -17,7 +17,7 @@ public class ProductoResult extends BaseResult<ProductoDTO> {
 	}
 
 	public void setProductos(List<ProductoDTO> dtos) {
-		super.setList(dtos);
+		setList(dtos);
 	}
 
 }

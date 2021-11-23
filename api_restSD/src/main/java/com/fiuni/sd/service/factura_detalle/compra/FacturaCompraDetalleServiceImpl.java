@@ -32,6 +32,7 @@ public class FacturaCompraDetalleServiceImpl
 
 	@Override
 	public FacturaCompraDetalleDTO save(final FacturaCompraDetalleDTO dto) {
+		dto.setSubtotal(productoRepository.getById(dto.getProducto_id()).getCosto() * dto.getCantidad());
 		return convertDomainToDto(facturaCompraDetalleRepository.save(convertDtoToDomain(dto)));
 	}
 

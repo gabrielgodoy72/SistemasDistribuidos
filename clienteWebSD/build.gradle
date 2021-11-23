@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.sun.jersey:jersey-bundle:1.19.4'
     // https://mvnrepository.com/artifact/com.sun.jersey/jersey-client
     implementation 'com.sun.jersey:jersey-client:1.19.4'
-	
+
     /* testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.mockito:mockito-core"
     testCompile "org.grails:grails-web-testing-support"
