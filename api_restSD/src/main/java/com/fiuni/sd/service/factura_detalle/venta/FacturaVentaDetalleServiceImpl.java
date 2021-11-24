@@ -45,7 +45,7 @@ public class FacturaVentaDetalleServiceImpl
 	@Override
 	public FacturaVentaDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable) {
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		Page<FacturaVentaDetalleDomain> pages = repository.findAllByFactura(idFactura, pageable);
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByFactura(facturaRepository.getById(idFactura), pageable);
 		result.setFacturasVentaDetalle(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//
@@ -58,7 +58,7 @@ public class FacturaVentaDetalleServiceImpl
 	@Override
 	public FacturaVentaDetalleResult getAllByServicio(final Integer idServicio, final Pageable pageable) {
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		Page<FacturaVentaDetalleDomain> pages = repository.findAllByServicio(idServicio, pageable);
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByServicio(servicioRepository.getById(idServicio), pageable);
 		result.setFacturasVentaDetalle(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//

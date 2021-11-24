@@ -10,7 +10,7 @@ public interface IFacturaCompraDetalleService extends IBaseService<FacturaCompra
 
 	public FacturaCompraDetalleDTO update(final Integer id, final FacturaCompraDetalleDTO dto);
 
-	public FacturaCompraDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable);
+	public FacturaCompraDetalleResult getAllByFactura(final Integer factura_id, final Pageable pageable);
 
-	public FacturaCompraDetalleResult getAllByProducto(final Integer idProducto, final Pageable pageable);
+	public FacturaCompraDetalleResult getAllByProducto(final Integer producto_id, final Pageable pageable);
 }

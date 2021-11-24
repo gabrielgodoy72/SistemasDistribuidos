@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fiuni.sd.domain.factura.compra.FacturaCompraDomain;
+import com.fiuni.sd.domain.proveedor.ProveedorDomain;
 
 @Repository
 public interface IFacturaCompraDao extends JpaRepository<FacturaCompraDomain, Integer> {
@@ -19,5 +20,5 @@ public interface IFacturaCompraDao extends JpaRepository<FacturaCompraDomain, In
 
 	public Optional<FacturaCompraDomain> findByNumero(final String numero);
 
-	public Page<FacturaCompraDomain> findAllByProveedor(final Integer idProveedor, final Pageable pageable);
+	public Page<FacturaCompraDomain> findAllByProveedor(final ProveedorDomain proveedor, final Pageable pageable);
 }

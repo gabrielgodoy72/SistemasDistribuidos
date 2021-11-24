@@ -55,6 +55,7 @@ public class FacturaVentaResource {
 		}
 	}
 
+	// VER !
 	@GetMapping(path = "/venta/search/date/{fecha}/page/{page_num}")
 	public FacturaVentaResult getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
 			@PathVariable(value = "page_num") final Integer pageNum) {
@@ -62,7 +63,7 @@ public class FacturaVentaResource {
 
 	}
 
-	@GetMapping(path = "/venta/search/proveedor/{cliente_id}/page/{page_num}")
+	@GetMapping(path = "/venta/search/cliente/{cliente_id}/page/{page_num}")
 	public FacturaVentaResult getAllByIdCliente(@PathVariable(value = "cliente_id") final Integer idCliente,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaVentaService.getAllByCliente(idCliente, PageRequest.of(pageNum, Setting.PAGE_SIZE));

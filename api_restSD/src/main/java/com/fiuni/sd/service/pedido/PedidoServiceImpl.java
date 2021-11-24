@@ -20,19 +20,19 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 		implements IPedidoService {
 
 	@Autowired
-	private IPedidoDao pedidoDao; // repository
+	private IPedidoDao pedidoRepository; // repository
 
 	@Autowired
-	private IClienteDao clienteDao; // repository
+	private IClienteDao clienteRepository; // repository
 
 	@Override
 	public PedidoDTO save(final PedidoDTO dto) {
-		return convertDomainToDto(pedidoDao.save(convertDtoToDomain(dto)));
+		return convertDomainToDto(pedidoRepository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
 	public PedidoDTO getById(final Integer id) {
-		return pedidoDao.findById(id)//
+		return pedidoRepository.findById(id)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("Pedido", "id", id));
 	}
@@ -40,7 +40,7 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 	@Override
 	public PedidoResult getAll(final Pageable pageable) {
 		final PedidoResult result = new PedidoResult();
-		Page<PedidoDomain> pages = pedidoDao.findAll(pageable);
+		Page<PedidoDomain> pages = pedidoRepository.findAll(pageable);
 		result.setPedidos(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//
@@ -52,27 +52,27 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 
 	@Override
 	public void deleteById(final Integer id) {
-		if (!pedidoDao.existsById(id)) {
+		if (!pedidoRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Pedido", "id", id);
 		}
-		pedidoDao.deleteById(id);
+		pedidoRepository.deleteById(id);
 	}
 
 	@Override
 	public PedidoDTO update(final Integer id, final PedidoDTO dto) {
-		if (!pedidoDao.existsById(id)) {
+		if (!pedidoRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Pedido", "id", id);
 		}
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Pedido", "id", id);
 		}
-		return convertDomainToDto(pedidoDao.save(convertDtoToDomain(dto)));
+		return convertDomainToDto(pedidoRepository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
 	public PedidoResult getAllByCliente(final Integer idCliente, final Pageable pageable) {
 		final PedidoResult result = new PedidoResult();
-		Page<PedidoDomain> pages = pedidoDao.findAllByCliente(idCliente, pageable);
+		Page<PedidoDomain> pages = pedidoRepository.findAllByCliente(clienteRepository.getById(idCliente), pageable);
 		result.setPedidos(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//
@@ -96,7 +96,7 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 		final PedidoDomain domain = new PedidoDomain();
 		domain.setId(dto.getId());
 		domain.setEstado(dto.getEstado());
-		domain.setCliente(clienteDao.getById(dto.getId_cliente()));
+		domain.setCliente(clienteRepository.getById(dto.getId_cliente()));
 		return domain;
 	}
 

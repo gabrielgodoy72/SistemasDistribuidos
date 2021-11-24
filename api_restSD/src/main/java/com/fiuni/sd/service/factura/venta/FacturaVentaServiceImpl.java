@@ -61,7 +61,7 @@ public class FacturaVentaServiceImpl extends BaseServiceImpl<FacturaVentaDTO, Fa
 	@Override
 	public FacturaVentaResult getAllByCliente(Integer idCliente, Pageable pageable) {
 		final FacturaVentaResult result = new FacturaVentaResult();
-		Page<FacturaVentaDomain> pages = repository.findAllByCliente(idCliente, pageable);
+		Page<FacturaVentaDomain> pages = repository.findAllByCliente(clienteRepository.getById(idCliente), pageable);
 		result.setFacturasVenta(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//

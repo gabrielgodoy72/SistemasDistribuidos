@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.fiuni.sd.domain.cliente.ClienteDomain;
 import com.fiuni.sd.domain.factura.venta.FacturaVentaDomain;
 
 @Repository
@@ -19,5 +20,5 @@ public interface IFacturaVentaDao extends JpaRepository<FacturaVentaDomain, Inte
 
 	public Optional<FacturaVentaDomain> findByNumero(final String numero);
 
-	public Page<FacturaVentaDomain> findAllByCliente(final Integer idCliente, final Pageable pageable);
+	public Page<FacturaVentaDomain> findAllByCliente(final ClienteDomain cliente, final Pageable pageable);
 }

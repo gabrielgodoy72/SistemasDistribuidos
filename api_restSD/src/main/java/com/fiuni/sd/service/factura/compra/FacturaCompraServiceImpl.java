@@ -61,7 +61,7 @@ public class FacturaCompraServiceImpl extends
 	@Override
 	public FacturaCompraResult getAllByProveedor(Integer idProveedor, Pageable pageable) {
 		final FacturaCompraResult result = new FacturaCompraResult();
-		Page<FacturaCompraDomain> pages = repository.findAllByProveedor(idProveedor, pageable);
+		Page<FacturaCompraDomain> pages = repository.findAllByProveedor(proveedorRepository.getById(idProveedor), pageable);
 		result.setFacturasCompra(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//

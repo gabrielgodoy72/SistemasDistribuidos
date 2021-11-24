@@ -59,6 +59,7 @@ public class PedidoDetalleResource {
 		return pedidoDetalleService.getAllByServicio(idServicio, PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
+	// VER !
 	@GetMapping(path = "/detalle/search/fecha/{fecha}/page/{page_num}")
 	public PedidoDetalleResult getAllPedidosDetalleByFechaAdquisicion(
 			@PathVariable(value = "fecha") final Date fecha,

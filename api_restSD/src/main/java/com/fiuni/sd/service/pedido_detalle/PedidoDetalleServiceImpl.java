@@ -45,7 +45,7 @@ public class PedidoDetalleServiceImpl extends
 	@Override
 	public PedidoDetalleResult getAllByPedido(final Integer idPedido, final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		Page<PedidoDetalleDomain> pages = repository.findAllByPedido(idPedido, pageable);
+		Page<PedidoDetalleDomain> pages = repository.findAllByPedido(pedidoRepository.getById(idPedido), pageable);
 		result.setPedidosDetalle(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//
@@ -58,7 +58,8 @@ public class PedidoDetalleServiceImpl extends
 	@Override
 	public PedidoDetalleResult getAllByServicio(final Integer idServicio, final Pageable pageable) {
 		final PedidoDetalleResult result = new PedidoDetalleResult();
-		Page<PedidoDetalleDomain> pages = repository.findAllByServicio(idServicio, pageable);
+		Page<PedidoDetalleDomain> pages = repository.findAllByServicio(servicioRepository.getById(idServicio),
+				pageable);
 		result.setPedidosDetalle(pages.getContent()//
 				.stream()//
 				.map(this::convertDomainToDto)//

@@ -54,7 +54,8 @@ public class FacturaCompraResource {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
+	
+	// VER !
 	@GetMapping(path = "/compra/search/date/{fecha}/page/{page_num}")
 	public FacturaCompraResult getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
 			@PathVariable(value = "page_num") final Integer pageNum) {
