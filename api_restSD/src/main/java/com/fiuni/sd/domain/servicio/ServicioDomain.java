@@ -14,11 +14,6 @@ import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.factura_detalle.venta.FacturaVentaDetalleDomain;
 import com.fiuni.sd.domain.pedido_detalle.PedidoDetalleDomain;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "servicios")
 public class ServicioDomain implements BaseDomain {

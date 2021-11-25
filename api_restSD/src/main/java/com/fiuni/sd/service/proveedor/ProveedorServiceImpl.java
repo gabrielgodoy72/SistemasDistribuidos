@@ -1,11 +1,16 @@
 package com.fiuni.sd.service.proveedor;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IProveedorDao;
 import com.fiuni.sd.domain.proveedor.ProveedorDomain;
@@ -13,20 +18,27 @@ import com.fiuni.sd.dto.proveedor.ProveedorDTO;
 import com.fiuni.sd.dto.proveedor.ProveedorResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 import com.fiuni.sd.utils.ResourceNotFoundException;
+import com.fiuni.sd.utils.Setting;
 
 @Service
+@Transactional
 public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, ProveedorDomain, ProveedorResult>
 		implements IProveedorService {
 
 	@Autowired
 	private IProveedorDao proveedorDao; // repository
+	
+	@Autowired
+	private CacheManager cacheManager;
 
 	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()" )
 	public ProveedorDTO save(ProveedorDTO dto) {
 		return convertDomainToDto(proveedorDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	public ProveedorDTO getById(Integer id) {
 		return proveedorDao.findById(id)//
 				.map(this::convertDomainToDto)//
@@ -34,6 +46,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #nombre")
 	public ProveedorDTO getByNombre(String nombre) {
 		return proveedorDao.findByNombre(nombre)//
 				.map(this::convertDomainToDto)//
@@ -41,6 +54,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #ruc")
 	public ProveedorDTO getByRuc(String ruc) {
 		return proveedorDao.findByRuc(ruc)//
 				.map(this::convertDomainToDto)//
@@ -49,12 +63,15 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 
 	@Override
 	public ProveedorResult getAll(Pageable pageable) {
+		final List<ProveedorDTO> list = new ArrayList<>();
 		final ProveedorResult result = new ProveedorResult();
 		Page<ProveedorDomain> pages = proveedorDao.findAll(pageable);
-		result.setProveedores(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		pages.forEach(proveedor -> {
+			ProveedorDTO dto = convertDomainToDto(proveedor);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_proveedor_" + dto.getId(), dto);
+		});
+		result.setProveedores(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;

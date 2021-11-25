@@ -20,33 +20,10 @@ public abstract class BaseResourceImpl<DTO extends BaseDTO> implements IBaseReso
         //_webResource.header(HttpHeaders.AUTHORIZATION, TOKEN);
     }
 
-    protected WebResource getWebResource() {
-
-        return _webResource;
-    }
+    protected WebResource getWebResource() { return _webResource; }
 
     protected Class<DTO> getDtoClass() {
         return _dtoClass;
-    }
-
-    @Override
-    public DTO save(DTO dto, String path) {
-        return getWebResource().path("/" + path).entity(dto).post(getDtoClass());
-    }
-
-    @Override
-    public DTO getById(Integer id, String path) {
-        return getWebResource().path("/"  + path + "/"  + id).get(getDtoClass());
-    }
-
-    @Override
-    public void delete(Integer id, String path) {
-        getWebResource().path("/"  + path + "/"  + id).delete();
-    }
-
-    @Override
-    public DTO update(Integer id, DTO dto, String path) {
-        return getWebResource().path("/" + path + "/" + id).entity(dto).put(getDtoClass());
     }
 
 }

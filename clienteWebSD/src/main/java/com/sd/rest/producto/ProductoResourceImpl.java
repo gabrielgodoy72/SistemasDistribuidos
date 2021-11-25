@@ -17,11 +17,24 @@ public class ProductoResourceImpl extends BaseResourceImpl<ProductoDTO> implemen
         final ProductoResult result = getWebResource().path("/productos/page/" + page).get(ProductoResult.class);
         return result;
     }
-/*
+
+    @Override
+    public ProductoDTO save(ProductoDTO dto) {
+        return getWebResource().path("/producto").entity(dto).post(getDtoClass());
+    }
+
+    @Override
+    public ProductoDTO getById(Integer id) {
+        return getWebResource().path("/producto/" + id).get(getDtoClass());
+    }
+
+    @Override
+    public void delete(Integer id) {
+        getWebResource().path("/producto/" + id).delete();
+    }
+
     @Override
     public ProductoDTO update(Integer id, ProductoDTO dto) {
-        return getWebResource().path("/producto/" + id).entity(dto).put(ProductoDTO.class);
+        return getWebResource().path("/producto/" + id).entity(dto).put(getDtoClass());
     }
-*/
-
 }

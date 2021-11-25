@@ -24,7 +24,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
     @Override
     public ProveedorB save(ProveedorB bean) {
         bean.setId(0);
-        return convertDtoToBean(proveedorResource.save(convertBeanToDto(bean), "proveedor"));
+        return convertDtoToBean(proveedorResource.save(convertBeanToDto(bean)));
     }
 
     @Override
@@ -44,17 +44,17 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
 
     @Override
     public ProveedorB getById(Integer id) {
-        return convertDtoToBean(proveedorResource.getById(id, "proveedor"));
+        return convertDtoToBean(proveedorResource.getById(id));
     }
 
     @Override
     public void delete(Integer id) {
-        proveedorResource.delete(id, "proveedores");
+        proveedorResource.delete(id);
     }
 
     @Override
     public ProveedorB update(Integer id, ProveedorB bean) {
-        return convertDtoToBean(proveedorResource.update(id, convertBeanToDto(bean), "proveedor"));
+        return convertDtoToBean(proveedorResource.update(id, convertBeanToDto(bean)));
     }
 
     @Override

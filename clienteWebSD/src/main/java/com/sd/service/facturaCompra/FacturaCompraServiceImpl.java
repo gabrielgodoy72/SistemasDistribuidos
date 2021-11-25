@@ -29,7 +29,7 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
     @Override
     public FacturaCompraB save(FacturaCompraB bean) {
         bean.setId(0);
-        return convertDtoToBean(facturaCompraResource.save(convertBeanToDto(bean), "compra"));
+        return convertDtoToBean(facturaCompraResource.save(convertBeanToDto(bean)));
     }
 
     @Override
@@ -49,17 +49,17 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
 
     @Override
     public FacturaCompraB getById(Integer id) {
-        return convertDtoToBean(facturaCompraResource.getById(id, "compra"));
+        return convertDtoToBean(facturaCompraResource.getById(id));
     }
 
     @Override
     public void delete(Integer id) {
-        facturaCompraResource.delete(id, "compra");
+        facturaCompraResource.delete(id);
     }
 
     @Override
     public FacturaCompraB update(Integer id, FacturaCompraB bean) {
-        return convertDtoToBean(facturaCompraResource.update(id, convertBeanToDto(bean), "compra"));
+        return convertDtoToBean(facturaCompraResource.update(id, convertBeanToDto(bean)));
     }
 
     @Override

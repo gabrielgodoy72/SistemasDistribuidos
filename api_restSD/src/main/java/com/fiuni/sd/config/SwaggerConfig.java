@@ -31,5 +31,5 @@ public class SwaggerConfig {
 	public JwtSecurityProperties jwtproperties() {
 		return new JwtSecurityProperties();
 	}
-
+	
 }

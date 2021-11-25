@@ -77,7 +77,7 @@ public class ProveedorResource {
 		}
 	}
 
-	@DeleteMapping("proveedores/{id}")
+	@DeleteMapping("proveedor/{id}")
 	public ResponseEntity<ProveedorDTO> deleteProveedor(@PathVariable(value = "id") final Integer id) {
 		try {
 			proveedorService.deleteById(id);

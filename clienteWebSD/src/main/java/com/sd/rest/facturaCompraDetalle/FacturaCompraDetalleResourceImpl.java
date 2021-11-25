@@ -22,4 +22,23 @@ public class FacturaCompraDetalleResourceImpl extends BaseResourceImpl<FacturaCo
         return result;
     }
 
+    @Override
+    public FacturaCompraDetalleDTO save(FacturaCompraDetalleDTO dto) {
+        return getWebResource().path("/detalle").entity(dto).post(getDtoClass());
+    }
+
+    @Override
+    public FacturaCompraDetalleDTO getById(Integer id) {
+        return getWebResource().path("/detalle/" + id).get(getDtoClass());
+    }
+
+    @Override
+    public void delete(Integer id) {
+        getWebResource().path("/detalle/" + id).delete();
+    }
+
+    @Override
+    public FacturaCompraDetalleDTO update(Integer id, FacturaCompraDetalleDTO dto) {
+        return getWebResource().path("/detalle/" + id).entity(dto).put(getDtoClass());
+    }
 }

@@ -23,7 +23,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
 
     @Override
     public ProductoB save(ProductoB bean) {
-        return convertDtoToBean(productoResource.save(convertBeanToDto(bean), "producto"));
+        return convertDtoToBean(productoResource.save(convertBeanToDto(bean)));
     }
 
     @Override
@@ -43,17 +43,17 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
 
     @Override
     public ProductoB getById(Integer id) {
-        return convertDtoToBean(productoResource.getById(id, "producto"));
+        return convertDtoToBean(productoResource.getById(id));
     }
 
     @Override
     public void delete(Integer id) {
-        productoResource.delete(id, "producto");
+        productoResource.delete(id);
     }
 
     @Override
     public ProductoB update(Integer id, ProductoB bean) {
-        return convertDtoToBean(productoResource.update(id, convertBeanToDto(bean), "producto"));
+        return convertDtoToBean(productoResource.update(id, convertBeanToDto(bean)));
     }
 
     @Override

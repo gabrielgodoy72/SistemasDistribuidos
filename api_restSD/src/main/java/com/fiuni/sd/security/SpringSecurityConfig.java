@@ -17,14 +17,14 @@ import com.fiuni.sd.service.usuario.JpaUserDetailService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JpaUserDetailService userDetailService;
 
 	@Override
-	@Bean(BeanIds.AUTHENTICATION_MANAGER)
+	@Bean//(BeanIds.AUTHENTICATION_MANAGER)
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}

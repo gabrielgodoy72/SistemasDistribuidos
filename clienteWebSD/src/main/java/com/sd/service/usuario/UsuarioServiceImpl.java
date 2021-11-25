@@ -20,7 +20,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
 
     @Override
     public UsuarioB save(UsuarioB bean) {
-        return convertDtoToBean(usuarioResource.save(convertBeanToDto(bean), "usuario"));
+        return convertDtoToBean(usuarioResource.save(convertBeanToDto(bean)));
     }
 
     @Override
@@ -40,17 +40,17 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
 
     @Override
     public UsuarioB getById(Integer id) {
-        return convertDtoToBean(usuarioResource.getById(id, "usuario"));
+        return convertDtoToBean(usuarioResource.getById(id));
     }
 
     @Override
     public void delete(Integer id) {
-        usuarioResource.delete(id, "usuario");
+        usuarioResource.delete(id);
     }
 
     @Override
     public UsuarioB update(Integer id, UsuarioB bean) {
-        return convertDtoToBean(usuarioResource.update(id, convertBeanToDto(bean), "usuario"));
+        return convertDtoToBean(usuarioResource.update(id, convertBeanToDto(bean)));
     }
 
     @Override
