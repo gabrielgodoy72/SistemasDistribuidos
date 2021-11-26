@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service("usuarioService")
 public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> implements IUsuarioService {
@@ -25,17 +24,22 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
 
     @Override
     public UsuarioBResult getAll(Integer page) {
-        final UsuarioBResult usuarioB = new UsuarioBResult();
+        final UsuarioBResult usuarioBResult = new UsuarioBResult();
         final UsuarioResult result = usuarioResource.getAll(page);
         if(result.getUsers() == null) {
-            usuarioB.setUsuarios(Collections.emptyList());
+            usuarioBResult.setUsuarios(Collections.emptyList());
         } else {
-            usuarioB.setUsuarios(result.getUsers().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
-            usuarioB.setPage(result.getPage());
-            usuarioB.setTotalPages(result.getTotalPages());
-            usuarioB.setTotal(result.getTotal());
+            List<UsuarioB> list = new ArrayList<>();
+            result.getUsers().forEach(usuario -> {
+                UsuarioB bean = convertDtoToBean(usuario);
+                list.add(bean);
+            });
+            usuarioBResult.setUsuarios(list);
+            usuarioBResult.setPage(result.getPage());
+            usuarioBResult.setTotalPages(result.getTotalPages());
+            usuarioBResult.setTotal(result.getTotal());
         }
-        return usuarioB;
+        return usuarioBResult;
     }
 
     @Override

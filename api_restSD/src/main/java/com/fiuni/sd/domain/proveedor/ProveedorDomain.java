@@ -1,6 +1,5 @@
 package com.fiuni.sd.domain.proveedor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,11 +12,6 @@ import javax.persistence.Table;
 import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.factura.compra.FacturaCompraDomain;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-//@Getter
-//@Setter
 @Entity
 @Table(name = "proveedores")
 public class ProveedorDomain implements BaseDomain {

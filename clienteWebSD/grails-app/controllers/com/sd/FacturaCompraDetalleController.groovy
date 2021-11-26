@@ -23,6 +23,7 @@ class FacturaCompraDetalleController {
     def list(Integer id) {
         def page = Math.max(id?:0,0)
         def facturasCompraDetalle = facturaCompraDetalleService.getAll(page)
+        facturasCompraDetalle.getList().forEach({ fd -> System.out.println(fd.subtotal) })
         [facturaCompraDetalleInstanceList: facturasCompraDetalle.getList(),
          facturaCompraDetalleIntanceTotal: facturasCompraDetalle.getTotal(),
          totalPages:facturasCompraDetalle.getTotalPages(),
@@ -41,7 +42,6 @@ class FacturaCompraDetalleController {
         def facturaCompraDetalleInstance = new FacturaCompraDetalleB(params)
         facturaCompraDetalleInstance.setProducto(productoService.getById(Integer.valueOf(params.productoId)))
         facturaCompraDetalleInstance.setFactura(facturaCompraService.getById(Integer.valueOf(params.facturaCompraId)))
-        facturaCompraDetalleInstance.setSubtotal(0);
         def newFacturaCompraDetalle = facturaCompraDetalleService.save(facturaCompraDetalleInstance)
         if (!newFacturaCompraDetalle?.getId()) {
             render(view: "create", model: [facturaCompraDetalleInstance: facturaCompraDetalleInstance])

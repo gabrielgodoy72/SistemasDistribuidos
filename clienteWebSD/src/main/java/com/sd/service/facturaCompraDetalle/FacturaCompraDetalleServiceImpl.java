@@ -1,9 +1,7 @@
 package com.sd.service.facturaCompraDetalle;
 
-import com.fiuni.sd.dto.factura.compra.FacturaCompraResult;
 import com.fiuni.sd.dto.factura_detalle.compra.FacturaCompraDetalleDTO;
 import com.fiuni.sd.dto.factura_detalle.compra.FacturaCompraDetalleResult;
-import com.sd.beans.facturaCompra.FacturaCompraBResult;
 import com.sd.beans.facturaCompraDetalle.FacturaCompraDetalleB;
 import com.sd.beans.facturaCompraDetalle.FacturaCompraDetalleBResult;
 import com.sd.rest.facturaCompraDetalle.IFacturaCompraDetalleResource;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service("facturaCompraDetalleService")
 public class FacturaCompraDetalleServiceImpl extends BaseServiceImpl<FacturaCompraDetalleB, FacturaCompraDetalleDTO>
@@ -35,17 +32,22 @@ public class FacturaCompraDetalleServiceImpl extends BaseServiceImpl<FacturaComp
 
     @Override
     public FacturaCompraDetalleBResult getAll(Integer page) {
-        final FacturaCompraDetalleBResult FacturaCompraDetalleB = new FacturaCompraDetalleBResult();
+        final FacturaCompraDetalleBResult facturaCompraDetalleBResult = new FacturaCompraDetalleBResult();
         final FacturaCompraDetalleResult result = facturaCompraDetalleResource.getAll(page);
         if(result.getFacturasCompraDetalle() == null) {
-            FacturaCompraDetalleB.setFacturasCompraDetalle(Collections.emptyList());
+            facturaCompraDetalleBResult.setFacturasCompraDetalle(Collections.emptyList());
         } else {
-            FacturaCompraDetalleB.setFacturasCompraDetalle(result.getFacturasCompraDetalle().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
-            FacturaCompraDetalleB.setPage(result.getPage());
-            FacturaCompraDetalleB.setTotalPages(result.getTotalPages());
-            FacturaCompraDetalleB.setTotal(result.getTotal());
+            List<FacturaCompraDetalleB> list = new ArrayList<>();
+            result.getFacturasCompraDetalle().forEach(detalle -> {
+                FacturaCompraDetalleB bean = convertDtoToBean(detalle);
+                list.add(bean);
+            });
+            facturaCompraDetalleBResult.setFacturasCompraDetalle(list);
+            facturaCompraDetalleBResult.setPage(result.getPage());
+            facturaCompraDetalleBResult.setTotalPages(result.getTotalPages());
+            facturaCompraDetalleBResult.setTotal(result.getTotal());
         }
-        return FacturaCompraDetalleB;
+        return facturaCompraDetalleBResult;
     }
 
     @Override

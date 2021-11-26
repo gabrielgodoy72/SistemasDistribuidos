@@ -5,7 +5,7 @@ class Producto {
     String descripcion;
     Double costo;
 
-    //static hasMany = [facturas_compra_detalle:FacturaCompraDetalle]
+    static hasMany = [facturas_compra_detalle:FacturaCompraDetalle]
 
     static constraints = {
         descripcion blank: false, nullable: false

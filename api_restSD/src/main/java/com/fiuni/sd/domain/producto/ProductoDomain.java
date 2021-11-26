@@ -13,11 +13,6 @@ import javax.persistence.Table;
 import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.factura_detalle.compra.FacturaCompraDetalleDomain;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-//@Getter
-//@Setter
 @Entity
 @Table(name = "productos")
 public class ProductoDomain implements BaseDomain {

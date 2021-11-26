@@ -6,6 +6,9 @@ class FacturaCompra {
     String numero;
     Double total;
 
+    static belongsTo = [proveedor: Proveedor]
+    static hasMany = [detalles: FacturaCompraDetalle]
+
     static constraints = {
     }
 }

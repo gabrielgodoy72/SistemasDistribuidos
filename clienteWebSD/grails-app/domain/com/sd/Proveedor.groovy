@@ -7,6 +7,8 @@ class Proveedor {
     String telefono;
     String direccion;
 
+    static hasMany = [facturas_compra:FacturaCompra]
+
     static constraints = {
     }
 }

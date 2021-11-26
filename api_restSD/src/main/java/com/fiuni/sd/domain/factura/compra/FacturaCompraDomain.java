@@ -18,11 +18,6 @@ import com.fiuni.sd.domain.base.BaseDomain;
 import com.fiuni.sd.domain.factura_detalle.compra.FacturaCompraDetalleDomain;
 import com.fiuni.sd.domain.proveedor.ProveedorDomain;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-//@Getter
-//@Setter
 @Entity
 @Table(name = "factura_compra")
 public class FacturaCompraDomain implements BaseDomain {

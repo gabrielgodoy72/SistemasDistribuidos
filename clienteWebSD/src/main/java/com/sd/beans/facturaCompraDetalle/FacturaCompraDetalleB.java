@@ -37,5 +37,8 @@ public class FacturaCompraDetalleB extends BaseBean {
         if (!StringUtils.isBlank(params.get("cantidad"))) {
             setCantidad(Integer.valueOf(params.get("cantidad")));
         }
+        if (!StringUtils.isBlank(params.get("subtotal"))) {
+            setSubtotal(Double.valueOf(params.get("subtotal")));
+        }
     }
 }

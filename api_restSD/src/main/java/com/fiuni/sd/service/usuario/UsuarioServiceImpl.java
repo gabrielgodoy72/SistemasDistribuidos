@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,15 +43,17 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	private CacheManager cacheManager;
 
 	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_usuario_' + #result.getId()")
 	public UsuarioDTO save(final UsuarioDTO dto) {
 		if (userDao.findByEmail(dto.getEmail()) == null) {
 			throw new ResourceNotFoundException("Usuario", "email", dto.getEmail());
 		}
+		/*
 		final UsuarioDomain domain = userDao.save(convertDtoToDomain(dto));
 		if (dto.getId() == null) {
 			cacheManager.getCache(Setting.CACHE_NAME).put("api_usuario_" + domain.getId(), domain);
-		}
-		return convertDomainToDto(domain);
+		}*/
+		return convertDomainToDto(userDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
@@ -66,6 +70,11 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
 	public UsuarioDTO getById(final Integer id) {
+		UsuarioDTO usuarioCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_usuario_" + id, UsuarioDTO.class);
+		if (usuarioCacheado != null) {
+			return usuarioCacheado;
+		}
 		return userDao.findById(id)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
@@ -93,9 +102,12 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 			throw new ResourceNotFoundException("Usuario", "id", id);
 		}
 		userDao.deleteById(id);
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_usuario_" + id);
 	}
 
 	@Override
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
 	public UsuarioDTO update(Integer id, UsuarioDTO dto) {
 		if (!userDao.existsById(id)) {
 			throw new ResourceNotFoundException("Usuario", "id", id);

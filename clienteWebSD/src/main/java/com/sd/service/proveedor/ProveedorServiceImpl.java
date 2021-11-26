@@ -2,18 +2,14 @@ package com.sd.service.proveedor;
 
 import com.fiuni.sd.dto.proveedor.ProveedorDTO;
 import com.fiuni.sd.dto.proveedor.ProveedorResult;
-import com.fiuni.sd.dto.usuario.UsuarioResult;
-import com.sd.beans.producto.ProductoB;
 import com.sd.beans.proveedor.ProveedorB;
 import com.sd.beans.proveedor.ProveedorBResult;
-import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.proveedor.IProveedorResource;
 import com.sd.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service("proveedorService")
 public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorDTO> implements IProveedorService {
@@ -29,17 +25,22 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
 
     @Override
     public ProveedorBResult getAll(Integer page) {
-        final ProveedorBResult proveedorB = new ProveedorBResult();
+        final ProveedorBResult proveedorBResult = new ProveedorBResult();
         final ProveedorResult result = proveedorResource.getAll(page);
         if(result.getProveedores() == null) {
-            proveedorB.setProveedores(Collections.emptyList());
+            proveedorBResult.setProveedores(Collections.emptyList());
         } else {
-            proveedorB.setProveedores(result.getProveedores().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
-            proveedorB.setPage(result.getPage());
-            proveedorB.setTotalPages(result.getTotalPages());
-            proveedorB.setTotal(result.getTotal());
+            List<ProveedorB> list = new ArrayList<>();
+            result.getProveedores().forEach(proveedor -> {
+                ProveedorB bean = convertDtoToBean(proveedor);
+                list.add(bean);
+            });
+            proveedorBResult.setProveedores(list);
+            proveedorBResult.setPage(result.getPage());
+            proveedorBResult.setTotalPages(result.getTotalPages());
+            proveedorBResult.setTotal(result.getTotal());
         }
-        return proveedorB;
+        return proveedorBResult;
     }
 
     @Override

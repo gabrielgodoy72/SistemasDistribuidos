@@ -15,5 +15,5 @@ public class FacturaCompraDetalleBResult extends BaseBResult<FacturaCompraDetall
     public void setFacturasCompraDetalle(List<FacturaCompraDetalleB> dtos) {
         super.setList(dtos);
     }
-    //setFacturasCompraDetalle
+
 }

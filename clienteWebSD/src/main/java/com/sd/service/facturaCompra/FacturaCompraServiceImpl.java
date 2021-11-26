@@ -7,6 +7,7 @@ import com.fiuni.sd.dto.proveedor.ProveedorResult;
 import com.fiuni.sd.dto.usuario.UsuarioResult;
 import com.sd.beans.facturaCompra.FacturaCompraB;
 import com.sd.beans.facturaCompra.FacturaCompraBResult;
+import com.sd.beans.facturaCompraDetalle.FacturaCompraDetalleB;
 import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.facturaCompra.IFacturaCompraResource;
 import com.sd.rest.proveedor.IProveedorResource;
@@ -34,17 +35,22 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
 
     @Override
     public FacturaCompraBResult getAll(Integer page) {
-        final FacturaCompraBResult FacturaCompraB = new FacturaCompraBResult();
+        final FacturaCompraBResult facturaCompraBResult = new FacturaCompraBResult();
         final FacturaCompraResult result = facturaCompraResource.getAll(page);
         if(result.getFacturasCompra() == null) {
-            FacturaCompraB.setFacturaCompra(Collections.emptyList());
+            facturaCompraBResult.setFacturaCompra(Collections.emptyList());
         } else {
-            FacturaCompraB.setFacturaCompra(result.getFacturasCompra().stream().map(this::convertDtoToBean).collect(Collectors.toList()));
-            FacturaCompraB.setPage(result.getPage());
-            FacturaCompraB.setTotalPages(result.getTotalPages());
-            FacturaCompraB.setTotal(result.getTotal());
+            List<FacturaCompraB> list = new ArrayList<>();
+            result.getFacturasCompra().forEach(factura -> {
+                FacturaCompraB bean = convertDtoToBean(factura);
+                list.add(bean);
+            });
+            facturaCompraBResult.setFacturaCompra(list);
+            facturaCompraBResult.setPage(result.getPage());
+            facturaCompraBResult.setTotalPages(result.getTotalPages());
+            facturaCompraBResult.setTotal(result.getTotal());
         }
-        return FacturaCompraB;
+        return facturaCompraBResult;
     }
 
     @Override

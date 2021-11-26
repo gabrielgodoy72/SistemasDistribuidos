@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -27,27 +28,37 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 
 	@Autowired
 	private IProveedorDao proveedorDao; // repository
-	
+
 	@Autowired
 	private CacheManager cacheManager;
 
 	@Override
-	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()" )
-	public ProveedorDTO save(ProveedorDTO dto) {
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()")
+	public ProveedorDTO save(final ProveedorDTO dto) {
 		return convertDomainToDto(proveedorDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
-	public ProveedorDTO getById(Integer id) {
+	public ProveedorDTO getById(final Integer id) {
+		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_proveedor_" + id, ProveedorDTO.class);
+		if (proveedorCacheado != null) {
+			return proveedorCacheado;
+		}
 		return proveedorDao.findById(id)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("Proveedor", "id", id));
 	}
 
 	@Override
-	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #nombre")
-	public ProveedorDTO getByNombre(String nombre) {
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()")
+	public ProveedorDTO getByNombre(final String nombre) {
+		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_proveedor_" + nombre, ProveedorDTO.class);
+		if (proveedorCacheado != null) {
+			return proveedorCacheado;
+		}
 		return proveedorDao.findByNombre(nombre)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("Proveedor", "nombre", nombre));
@@ -55,17 +66,22 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #ruc")
-	public ProveedorDTO getByRuc(String ruc) {
+	public ProveedorDTO getByRuc(final String ruc) {
+		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_proveedor_" + ruc, ProveedorDTO.class);
+		if (proveedorCacheado != null) {
+			return proveedorCacheado;
+		}
 		return proveedorDao.findByRuc(ruc)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("Proveedor", "ruc", ruc));
 	}
 
 	@Override
-	public ProveedorResult getAll(Pageable pageable) {
+	public ProveedorResult getAll(final Pageable pageable) {
 		final List<ProveedorDTO> list = new ArrayList<>();
 		final ProveedorResult result = new ProveedorResult();
-		Page<ProveedorDomain> pages = proveedorDao.findAll(pageable);
+		final Page<ProveedorDomain> pages = proveedorDao.findAll(pageable);
 		pages.forEach(proveedor -> {
 			ProveedorDTO dto = convertDomainToDto(proveedor);
 			list.add(dto);
@@ -78,15 +94,18 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public void deleteById(final Integer id) {
 		if (!proveedorDao.existsById(id)) {
 			throw new ResourceNotFoundException("Proveedor", "id", id);
 		}
 		proveedorDao.deleteById(id);
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_proveedor_" + id);
 	}
 
 	@Override
-	public ProveedorDTO update(Integer id, ProveedorDTO dto) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
+	public ProveedorDTO update(final Integer id, final ProveedorDTO dto) {
 		if (!proveedorDao.existsById(id)) {
 			throw new ResourceNotFoundException("Proveedor", "id", id);
 		}
@@ -97,7 +116,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
-	protected ProveedorDTO convertDomainToDto(ProveedorDomain domain) {
+	protected ProveedorDTO convertDomainToDto(final ProveedorDomain domain) {
 		final ProveedorDTO dto = new ProveedorDTO();
 		dto.setId(domain.getId());
 		dto.setNombre(domain.getNombre());
@@ -108,7 +127,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
-	protected ProveedorDomain convertDtoToDomain(ProveedorDTO dto) {
+	protected ProveedorDomain convertDtoToDomain(final ProveedorDTO dto) {
 		final ProveedorDomain domain = new ProveedorDomain();
 		domain.setId(dto.getId());
 		domain.setNombre(dto.getNombre());
