@@ -12,7 +12,7 @@ public class ServicioResult extends BaseResult<ServicioDTO> {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement
-	public List<ServicioDTO> getServicio() {
+	public List<ServicioDTO> getServicios() {
 		return getList();
 	}
 
