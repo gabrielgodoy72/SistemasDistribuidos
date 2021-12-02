@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IFacturaCompraDao;
 import com.fiuni.sd.dao.IProveedorDao;
@@ -27,7 +29,9 @@ public class FacturaCompraServiceImpl extends
 	private IProveedorDao proveedorRepository; // repository
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public FacturaCompraDTO save(FacturaCompraDTO dto) {
+		proveedorRepository.getById(dto.getProveedor_id());
 		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 

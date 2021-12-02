@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IProveedorDao;
@@ -33,12 +34,17 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	private CacheManager cacheManager;
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()")
 	public ProveedorDTO save(final ProveedorDTO dto) {
+		if(dto.getNombre().length() < 10) {
+			throw new RuntimeException();
+		}
 		return convertDomainToDto(proveedorDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	public ProveedorDTO getById(final Integer id) {
 		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//

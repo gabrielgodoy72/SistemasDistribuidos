@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IProductoDao;
 import com.fiuni.sd.domain.producto.ProductoDomain;
@@ -38,6 +40,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ProductoDTO getById(final Integer id) {
 		ProductoDTO productoCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
 				.get("api_producto_" + id, ProductoDTO.class);
