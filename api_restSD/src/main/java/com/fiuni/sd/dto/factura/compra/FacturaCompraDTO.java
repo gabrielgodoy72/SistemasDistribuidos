@@ -20,7 +20,7 @@ public class FacturaCompraDTO extends BaseDTO {
 
 	private String numero;
 
-	private Double total;
+	private Double total = 0.0;
 
 	private Integer proveedor_id;
 

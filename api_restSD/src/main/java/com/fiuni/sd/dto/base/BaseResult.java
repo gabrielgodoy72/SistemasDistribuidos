@@ -10,7 +10,6 @@ public abstract class BaseResult<DTO extends BaseDTO> implements Serializable {
 	private List<DTO> _dtos;
 	private Integer _page;
 	private Integer _totalPages;
-	private Integer _total;
 
 	protected List<DTO> getList() {
 		return _dtos;
@@ -18,10 +17,6 @@ public abstract class BaseResult<DTO extends BaseDTO> implements Serializable {
 
 	protected void setList(final List<DTO> dtos) {
 		_dtos = dtos;
-	}
-	
-	public void setTotal(Integer total) {
-		_total = total;
 	}
 
 	public Integer getTotal() {

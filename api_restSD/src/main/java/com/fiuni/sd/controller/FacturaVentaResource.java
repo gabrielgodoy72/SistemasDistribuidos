@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class FacturaVentaResource {
 	private IFacturaVentaService facturaVentaService;
 
 	@PostMapping(path = "/venta")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaVentaDTO> create(@RequestBody @Valid final FacturaVentaDTO dto) {
 		try {
 			return ResponseEntity.ok(facturaVentaService.save(dto));
@@ -38,6 +40,7 @@ public class FacturaVentaResource {
 	}
 
 	@GetMapping(path = "/venta/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaVentaDTO> getById(@PathVariable(value = "id") final Integer id) {
 		try {
 			return ResponseEntity.ok(facturaVentaService.getById(id));
@@ -47,6 +50,7 @@ public class FacturaVentaResource {
 	}
 
 	@GetMapping(path = "/venta/search/numero/{numero}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaVentaDTO> getByNumero(@PathVariable(value = "numero") final String numero) {
 		try {
 			return ResponseEntity.ok(facturaVentaService.getByNumero(numero));
@@ -57,6 +61,7 @@ public class FacturaVentaResource {
 
 	// VER !
 	@GetMapping(path = "/venta/search/date/{fecha}/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaVentaResult getAllByFecha(@PathVariable(value = "fecha") final Date fecha,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaVentaService.getAllByFecha(fecha, PageRequest.of(pageNum, Setting.PAGE_SIZE));
@@ -64,6 +69,7 @@ public class FacturaVentaResource {
 	}
 
 	@GetMapping(path = "/venta/search/cliente/{cliente_id}/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaVentaResult getAllByIdCliente(@PathVariable(value = "cliente_id") final Integer idCliente,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaVentaService.getAllByCliente(idCliente, PageRequest.of(pageNum, Setting.PAGE_SIZE));
@@ -71,12 +77,14 @@ public class FacturaVentaResource {
 	}
 
 	@GetMapping(path = "/venta/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaVentaResult getAll(@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaVentaService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 
 	}
 
 	@PutMapping(path = "/venta/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaVentaDTO> update(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final FacturaVentaDTO dto) {
 		try {
@@ -87,10 +95,10 @@ public class FacturaVentaResource {
 	}
 
 	@DeleteMapping(path = "/venta/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaVentaDTO> delete(@PathVariable(value = "id") final Integer id) {
 		try {
-			facturaVentaService.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok(facturaVentaService.deleteById(id));
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}

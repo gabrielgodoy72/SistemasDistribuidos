@@ -1,8 +1,13 @@
 package com.fiuni.sd.service.factura_detalle.compra;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,7 @@ import com.fiuni.sd.dto.factura_detalle.compra.FacturaCompraDetalleDTO;
 import com.fiuni.sd.dto.factura_detalle.compra.FacturaCompraDetalleResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 import com.fiuni.sd.utils.ResourceNotFoundException;
+import com.fiuni.sd.utils.Setting;
 
 @Service
 public class FacturaCompraDetalleServiceImpl
@@ -30,14 +36,24 @@ public class FacturaCompraDetalleServiceImpl
 	@Autowired
 	private IProductoDao productoRepository; // repository
 
+	@Autowired
+	private CacheManager cacheManager;
+
 	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + #result.getId()")
 	public FacturaCompraDetalleDTO save(final FacturaCompraDetalleDTO dto) {
 		dto.setSubtotal(productoRepository.getById(dto.getProducto_id()).getCosto() * dto.getCantidad());
 		return convertDomainToDto(facturaCompraDetalleRepository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + #id")
 	public FacturaCompraDetalleDTO getById(final Integer id) {
+		FacturaCompraDetalleDTO detalleCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_facturaCompraDetalle_" + id, FacturaCompraDetalleDTO.class);
+		if (detalleCacheado != null) {
+			return detalleCacheado;
+		}
 		return facturaCompraDetalleRepository.findById(id)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow(() -> new ResourceNotFoundException("FacturaCompraDetalle", "id", id));
@@ -45,13 +61,16 @@ public class FacturaCompraDetalleServiceImpl
 
 	@Override
 	public FacturaCompraDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable) {
+		final List<FacturaCompraDetalleDTO> list = new ArrayList<>();
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
 		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository//
 				.findAllByFactura(facturaCompraRepository.getById(idFactura), pageable);
-		result.setFacturasCompraDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		pages.forEach(detalle -> {
+			FacturaCompraDetalleDTO dto = convertDomainToDto(detalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaCompraDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasCompraDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
@@ -59,13 +78,16 @@ public class FacturaCompraDetalleServiceImpl
 
 	@Override
 	public FacturaCompraDetalleResult getAllByProducto(final Integer idProducto, final Pageable pageable) {
+		final List<FacturaCompraDetalleDTO> list = new ArrayList<>();
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
 		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository//
 				.findAllByProducto(productoRepository.getById(idProducto), pageable);
-		result.setFacturasCompraDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		pages.forEach(detalle -> {
+			FacturaCompraDetalleDTO dto = convertDomainToDto(detalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaCompraDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasCompraDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
@@ -73,26 +95,33 @@ public class FacturaCompraDetalleServiceImpl
 
 	@Override
 	public FacturaCompraDetalleResult getAll(final Pageable pageable) {
+		final List<FacturaCompraDetalleDTO> list = new ArrayList<>();
 		final FacturaCompraDetalleResult result = new FacturaCompraDetalleResult();
 		Page<FacturaCompraDetalleDomain> pages = facturaCompraDetalleRepository.findAll(pageable);
-		result.setFacturasCompraDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		pages.forEach(detalle -> {
+			FacturaCompraDetalleDTO dto = convertDomainToDto(detalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaCompraDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasCompraDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + #id")
+	public FacturaCompraDetalleDTO deleteById(final Integer id) {
 		if (!facturaCompraDetalleRepository.existsById(id)) {
 			throw new ResourceNotFoundException("FacturaCompraDetalle", "id", id);
 		}
+		FacturaCompraDetalleDTO detalle = convertDomainToDto(facturaCompraDetalleRepository.getById(id));
 		facturaCompraDetalleRepository.deleteById(id);
+		return detalle;
 	}
 
 	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + #id")
 	public FacturaCompraDetalleDTO update(final Integer id, final FacturaCompraDetalleDTO dto) {
 		if (!facturaCompraDetalleRepository.existsById(id)) {
 			throw new ResourceNotFoundException("FacturaCompraDetalle", "id", id);
@@ -100,6 +129,7 @@ public class FacturaCompraDetalleServiceImpl
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("FacturaCompraDetalle", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_facturaCompraDetalle_" + id);
 		return convertDomainToDto(facturaCompraDetalleRepository.save(convertDtoToDomain(dto)));
 	}
 

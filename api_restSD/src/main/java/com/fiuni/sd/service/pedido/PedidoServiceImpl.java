@@ -2,7 +2,6 @@ package com.fiuni.sd.service.pedido;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -18,7 +17,6 @@ import com.fiuni.sd.dao.IPedidoDao;
 import com.fiuni.sd.domain.pedido.PedidoDomain;
 import com.fiuni.sd.dto.pedido.PedidoDTO;
 import com.fiuni.sd.dto.pedido.PedidoResult;
-import com.fiuni.sd.dto.servicio.ServicioDTO;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 import com.fiuni.sd.utils.ResourceNotFoundException;
 import com.fiuni.sd.utils.Setting;
@@ -72,16 +70,17 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_pedido_' + #id")
+	public PedidoDTO deleteById(final Integer id) {
 		if (!pedidoRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Pedido", "id", id);
 		}
+		PedidoDTO pedido = convertDomainToDto(pedidoRepository.getById(id));
 		pedidoRepository.deleteById(id);
-		cacheManager.getCache(Setting.CACHE_NAME).evict("api_pedido_" + id);
+		return pedido;
 	}
 
 	@Override
-	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_pedido_' + #id")
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_pedido_' + #id")
 	public PedidoDTO update(final Integer id, final PedidoDTO dto) {
 		if (!pedidoRepository.existsById(id)) {
@@ -90,6 +89,7 @@ public class PedidoServiceImpl extends BaseServiceImpl<PedidoDTO, PedidoDomain, 
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Pedido", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_pedido_" + id);
 		return convertDomainToDto(pedidoRepository.save(convertDtoToDomain(dto)));
 	}
 

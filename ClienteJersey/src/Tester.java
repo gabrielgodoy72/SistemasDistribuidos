@@ -35,10 +35,10 @@ public class Tester {
 		//required
 		//productoM.create("Router", 200000);
 			//llamada directa   (Exito y Fallido)
-				/*ProveedorDTO proveedor = proveedorM.create("Gabriel Godoy", "San Juan del Parana", "4532853", "0985941699");
+				ProveedorDTO proveedor = proveedorM.create("Gabriel Godoy", "San Juan del Parana", "4532853", "0985941699");
 				showProvider(proveedor);
-				proveedor = proveedorM.create("Lola", "Carmen del Paraná", "3546985", "0984569966");
-				showProvider(proveedor);*/
+				//ProveedorDTO proveedor = proveedorM.create("Lola", "Carmen del Paraná", "3546985", "0984569966");
+				//showProvider(proveedor);
 			//llamada desde otro metodo con transaccion (Exito y Fallido)
 				/*FacturaCompraDTO facturaC = facturaCompraM.create("0001-02", 2, new Date(121, 10, 29));
 				showInvoice(facturaC);

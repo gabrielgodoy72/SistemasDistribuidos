@@ -28,7 +28,7 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 
 	@Autowired
 	private IServicioDao repository; // repository
-	
+
 	@Autowired
 	private CacheManager cacheManager;
 
@@ -81,16 +81,17 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_servicio_' + #id")
+	public ServicioDTO deleteById(final Integer id) {
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("Servicio", "id", id);
 		}
+		ServicioDTO servicio = convertDomainToDto(repository.getById(id));
 		repository.deleteById(id);
-		cacheManager.getCache(Setting.CACHE_NAME).evict("api_servicio_" + id);
+		return servicio;
 	}
 
 	@Override
-	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_servicio_' + #id")
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_servicio_' + #id")
 	public ServicioDTO update(final Integer id, final ServicioDTO dto) {
 		if (!repository.existsById(id)) {
@@ -99,6 +100,7 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Servicio", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_servicio_" + id);
 		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 

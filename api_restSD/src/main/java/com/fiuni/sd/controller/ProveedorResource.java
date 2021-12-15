@@ -5,8 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +28,7 @@ public class ProveedorResource {
 	private IProveedorService proveedorService;
 
 	@PostMapping(path = "/proveedor")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ProveedorDTO> createProveedor(@RequestBody @Valid final ProveedorDTO dto) {
 		try {
 			return ResponseEntity.ok(proveedorService.save(dto));
@@ -38,6 +38,7 @@ public class ProveedorResource {
 	}
 
 	@GetMapping(path = "/proveedor/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ProveedorDTO> getProveedor(@PathVariable(value = "id") final Integer id) {
 		try {
 			return ResponseEntity.ok(proveedorService.getById(id));
@@ -47,6 +48,7 @@ public class ProveedorResource {
 	}
 
 	@GetMapping(path = "/proveedor/search/nombre/{nombre}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ProveedorDTO> getProveedorByNombre(@PathVariable(value = "nombre") final String nombre) {
 		try {
 			return ResponseEntity.ok(proveedorService.getByNombre(nombre));
@@ -56,6 +58,7 @@ public class ProveedorResource {
 	}
 
 	@GetMapping(path = "/proveedor/search/ruc/{ruc}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ProveedorDTO> getProveedorByRuc(@PathVariable(value = "ruc") final String ruc) {
 		try {
 			return ResponseEntity.ok(proveedorService.getByRuc(ruc));
@@ -65,11 +68,13 @@ public class ProveedorResource {
 	}
 
 	@GetMapping(path = "/proveedores/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ProveedorResult getProveedores(@PathVariable(value = "page_num") final Integer pageNum) {
 		return proveedorService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/proveedor/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ProveedorDTO> updateProveedor(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final ProveedorDTO dto) {
 		try {
@@ -80,10 +85,10 @@ public class ProveedorResource {
 	}
 
 	@DeleteMapping("proveedor/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ProveedorDTO> deleteProveedor(@PathVariable(value = "id") final Integer id) {
 		try {
-			proveedorService.deleteById(id);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok(proveedorService.deleteById(id));
 		} catch (Exception ex) {
 			return ResponseEntity.noContent().build();
 		}

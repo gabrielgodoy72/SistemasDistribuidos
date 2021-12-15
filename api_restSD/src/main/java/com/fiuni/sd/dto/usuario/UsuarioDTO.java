@@ -7,11 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseDTO;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-//@Getter
-//@Setter
 @XmlRootElement(name = "user_register")
 public class UsuarioDTO extends BaseDTO {
 	private static final long serialVersionUID = 1L;
@@ -28,6 +23,10 @@ public class UsuarioDTO extends BaseDTO {
 	@NotEmpty
 	@Email
 	private String email;
+
+	@NotNull
+	@NotEmpty
+	private String username;
 
 	@NotNull
 	@NotEmpty
@@ -57,6 +56,14 @@ public class UsuarioDTO extends BaseDTO {
 		this.email = email;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -64,7 +71,5 @@ public class UsuarioDTO extends BaseDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
 
 }

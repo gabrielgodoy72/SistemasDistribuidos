@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class ClienteResource {
 	private IClienteService clienteService;
 
 	@PostMapping(path = "/cliente")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ClienteDTO> createClient(@RequestBody @Valid final ClienteDTO clientDto) {
 		try {
 			return ResponseEntity.ok(clienteService.save(clientDto));
@@ -36,6 +38,7 @@ public class ClienteResource {
 	}
 
 	@GetMapping(path = "/cliente/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ClienteDTO> readClient(@PathVariable(value = "id") final Integer id) {
 		try {
 			ClienteDTO clientDto = clienteService.getById(id);
@@ -46,21 +49,23 @@ public class ClienteResource {
 	}
 
 	@GetMapping(path = "/clientes/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ClienteResult readClients(@PathVariable(value = "page_num") final Integer pageNum) {
 		return clienteService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/cliente/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ClienteDTO> updateClient(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final ClienteDTO clientDto) {
 		return ResponseEntity.ok(clienteService.update(id, clientDto));
 	}
 
 	@DeleteMapping("/cliente/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ClienteDTO> deleteClient(@PathVariable final Integer id) {
 		try {
-			clienteService.deleteById(id);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok(clienteService.deleteById(id));
 		} catch (Exception ex) {
 			return ResponseEntity.noContent().build();
 		}

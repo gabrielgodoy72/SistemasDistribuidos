@@ -1,6 +1,13 @@
-/PedidoManager.class
-/ServicioManager.class
+/AbstractBaseManager.class
 /ClienteManager.class
-/FacturaVentaManager.class
+/FacturaCompraDetalleManager.class
+/FacturaCompraManager.class
 /FacturaVentaDetalleManager.class
+/FacturaVentaManager.class
 /PedidoDetalleManager.class
+/PedidoManager.class
+/Principal.class
+/ProductoManager.class
+/ProveedorManager.class
+/ServicioManager.class
+/Tester.class

@@ -11,8 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IProductoDao;
 import com.fiuni.sd.domain.producto.ProductoDomain;
@@ -40,7 +38,6 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
-	@Transactional(propagation = Propagation.REQUIRED)
 	public ProductoDTO getById(final Integer id) {
 		ProductoDTO productoCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
 				.get("api_producto_" + id, ProductoDTO.class);
@@ -49,7 +46,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 		}
 		return productoDao.findById(id)//
 				.map(this::convertDomainToDto)//
-				.orElseThrow(() -> new ResourceNotFoundException("Producto", "id", id));
+				.orElseThrow();
 	}
 
 	@Override
@@ -69,16 +66,17 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
+	public ProductoDTO deleteById(Integer id) {
 		if (!productoDao.existsById(id)) {
 			throw new ResourceNotFoundException("Producto", "id", id);
 		}
+		ProductoDTO producto = convertDomainToDto(productoDao.getById(id));
 		productoDao.deleteById(id);
-		cacheManager.getCache(Setting.CACHE_NAME).evict("api_producto_" + id);
+		return producto;
 	}
 
 	@Override
-	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
 	public ProductoDTO update(final Integer id, final ProductoDTO dto) {
 		if (!productoDao.existsById(id)) {
@@ -87,6 +85,7 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Producto", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_producto_" + id);
 		return convertDomainToDto(productoDao.save(convertDtoToDomain(dto)));
 	}
 

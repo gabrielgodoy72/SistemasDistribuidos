@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,18 +21,19 @@ import com.fiuni.sd.service.usuario.IUsuarioService;
 import com.fiuni.sd.utils.Setting;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/account")
 public class UsuarioResource {
 
 	@Autowired
 	private IUsuarioService usuarioService;
 
-	@PostMapping(path = "/usuario")
+	@PostMapping(path = "/register")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody @Valid final UsuarioDTO dto) {
 		try {
 			return ResponseEntity.ok(usuarioService.save(dto));
 		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
@@ -50,14 +52,15 @@ public class UsuarioResource {
 	}
 
 	@PutMapping(path = "/usuario/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final UsuarioDTO userDto) {
 		return ResponseEntity.ok(usuarioService.update(id, userDto));
 	}
 
 	@DeleteMapping("/usuario/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<UsuarioDTO> deleteUsuario(@PathVariable final Integer id) {
-		usuarioService.deleteById(id);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(usuarioService.deleteById(id));
 	}
 }

@@ -1,22 +1,23 @@
-package com.fiuni.sd.dto.servicio;
+package com.fiuni.sd.dto.rol;
 
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fiuni.sd.dto.base.BaseResult;
 
-@XmlRootElement(name = "servicioResult")
-public class ServicioResult extends BaseResult<ServicioDTO> {
+@XmlRootElement(name = "rolesResult")
+public class RolResult extends BaseResult<RolDTO> {
 
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement
-	public List<ServicioDTO> getServicio() {
+	public List<RolDTO> getRoles() {
 		return getList();
 	}
 
-	public void setServicios(List<ServicioDTO> dtos) {
+	public void setRoles(List<RolDTO> dtos) {
 		setList(dtos);
 	}
 

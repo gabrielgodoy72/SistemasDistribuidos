@@ -22,14 +22,9 @@ public class SwaggerConfig {
 				.build();
 	}
 
-	@Bean
+	/*	@Bean
 	public PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-
-	@Bean
-	public JwtSecurityProperties jwtproperties() {
-		return new JwtSecurityProperties();
-	}
-	
+*/
 }

@@ -45,25 +45,15 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	@Override
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_usuario_' + #result.getId()")
 	public UsuarioDTO save(final UsuarioDTO dto) {
-		if (userDao.findByEmail(dto.getEmail()) == null) {
-			throw new ResourceNotFoundException("Usuario", "email", dto.getEmail());
+		if (!userDao.findByUsername(dto.getUsername()).isEmpty()) {
+			throw new ResourceNotFoundException("Usuario", "username", dto.getUsername());
 		}
-		/*
-		final UsuarioDomain domain = userDao.save(convertDtoToDomain(dto));
-		if (dto.getId() == null) {
-			cacheManager.getCache(Setting.CACHE_NAME).put("api_usuario_" + domain.getId(), domain);
-		}*/
-		return convertDomainToDto(userDao.save(convertDtoToDomain(dto)));
-	}
-
-	@Override
-	public UsuarioDTO createUserAccount(final UsuarioDTO signUp) {
-		final UsuarioDomain user = convertDtoToDomain(signUp);
-		user.setPassword(passwordEncoder.encode(signUp.getPassword()));
-		final RoleDomain roleUser = new RoleDomain();
-		roleUser.setNombre("ROLE_USER");
-		roleUser.setUsuarios(Set.of(user));
-		user.setRoles(Set.of(roleUser));
+		final UsuarioDomain user = convertDtoToDomain(dto);
+		user.setPassword(passwordEncoder.encode(dto.getPassword()));
+		final RoleDomain role = new RoleDomain();
+		role.setNombre("ROLE_USER");
+		role.setUsuarios(Set.of(user));
+		user.setRoles(Set.of(rolDao.findByDescripcion("ROLE_USER").orElseThrow())); // por defecto es ROLE_USER
 		return convertDomainToDto(userDao.save(user));
 	}
 
@@ -77,7 +67,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		}
 		return userDao.findById(id)//
 				.map(this::convertDomainToDto)//
-				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
+				.orElseThrow();
 	}
 
 	@Override
@@ -97,16 +87,17 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
+	public UsuarioDTO deleteById(final Integer id) {
 		if (!userDao.existsById(id)) {
 			throw new ResourceNotFoundException("Usuario", "id", id);
 		}
+		UsuarioDTO usuario = convertDomainToDto(userDao.getById(id));
 		userDao.deleteById(id);
-		cacheManager.getCache(Setting.CACHE_NAME).evict("api_usuario_" + id);
+		return usuario;
 	}
 
 	@Override
-	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
 	public UsuarioDTO update(Integer id, UsuarioDTO dto) {
 		if (!userDao.existsById(id)) {
@@ -115,6 +106,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Usuario", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_usuario_" + id);
 		return convertDomainToDto(userDao.save(convertDtoToDomain(dto)));
 	}
 
@@ -125,6 +117,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		dto.setNombre(domain.getNombre());
 		dto.setApellido(domain.getApellido());
 		dto.setEmail(domain.getEmail());
+		dto.setUsername(domain.getUsername());
 		return dto;
 	}
 
@@ -135,6 +128,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		domain.setNombre(dto.getNombre());
 		domain.setApellido(dto.getApellido());
 		domain.setEmail(dto.getEmail());
+		domain.setUsername(dto.getUsername());
+		domain.setPassword(dto.getPassword());
 		return domain;
 	}
 

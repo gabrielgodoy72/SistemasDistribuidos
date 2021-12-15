@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class FacturaCompraDetalleResource {
 	private IFacturaCompraDetalleService facturaCompraDetalleService;
 
 	@PostMapping(path = "/detalle")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaCompraDetalleDTO> create(@RequestBody @Valid final FacturaCompraDetalleDTO dto) {
 		try {
 			return ResponseEntity.ok(facturaCompraDetalleService.save(dto));
@@ -36,6 +38,7 @@ public class FacturaCompraDetalleResource {
 	}
 
 	@GetMapping(path = "/detalle/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaCompraDetalleDTO> getById(@PathVariable(value = "id") final Integer id) {
 		try {
 			return ResponseEntity.ok(facturaCompraDetalleService.getById(id));
@@ -45,12 +48,14 @@ public class FacturaCompraDetalleResource {
 	}
 
 	@GetMapping(path = "/detalle/search/factura/{factura_id}/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaCompraDetalleResult getAllByIdFactura(@PathVariable(value = "factura_id") final Integer idFactura,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaCompraDetalleService.getAllByFactura(idFactura, PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@GetMapping(path = "/detalle/search/producto/{producto_id}/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaCompraDetalleResult getAllByIdProducto(@PathVariable(value = "producto_id") final Integer idProducto,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaCompraDetalleService.getAllByProducto(idProducto, PageRequest.of(pageNum, Setting.PAGE_SIZE));
@@ -58,11 +63,13 @@ public class FacturaCompraDetalleResource {
 	}
 
 	@GetMapping(path = "/detalle/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public FacturaCompraDetalleResult getAll(@PathVariable(value = "page_num") final Integer pageNum) {
 		return facturaCompraDetalleService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/detalle/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaCompraDetalleDTO> update(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final FacturaCompraDetalleDTO dto) {
 		try {
@@ -73,10 +80,10 @@ public class FacturaCompraDetalleResource {
 	}
 
 	@DeleteMapping(path = "/detalle/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<FacturaCompraDetalleDTO> delete(@PathVariable(value = "id") final Integer id) {
 		try {
-			facturaCompraDetalleService.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok(facturaCompraDetalleService.deleteById(id));
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}

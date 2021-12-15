@@ -16,4 +16,6 @@ public interface IUsuarioDao extends JpaRepository<UsuarioDomain, Integer> {
 
 	public Optional<UsuarioDomain> findByEmail(String email);
 
+	public Optional<UsuarioDomain> findByUsername(String username);
+
 }

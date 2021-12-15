@@ -16,13 +16,6 @@ import javax.persistence.Table;
 
 import com.fiuni.sd.domain.base.BaseDomain;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-
-
-//@Getter
-//@Setter
 @Entity
 @Table(name = "usuarios")
 public class UsuarioDomain implements BaseDomain {
@@ -42,6 +35,9 @@ public class UsuarioDomain implements BaseDomain {
 
 	@Column(name = "email")
 	private String email;
+
+	@Column(name = "username")
+	private String username;
 
 	@Column(name = "password")
 	private String password;
@@ -82,6 +78,14 @@ public class UsuarioDomain implements BaseDomain {
 		this.email = email;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -97,5 +101,5 @@ public class UsuarioDomain implements BaseDomain {
 	public void setRoles(Set<RoleDomain> roles) {
 		this.roles = roles;
 	}
-	
+
 }

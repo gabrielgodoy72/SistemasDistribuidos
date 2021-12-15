@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class PedidoResource {
 	private IPedidoService pedidoService;
 
 	@PostMapping(path = "/pedido")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<PedidoDTO> createPedido(@RequestBody @Valid final PedidoDTO pedidoDTO) {
 		try {
 			return ResponseEntity.ok(pedidoService.save(pedidoDTO));
@@ -36,17 +38,20 @@ public class PedidoResource {
 	}
 
 	@GetMapping(path = "/pedidos/search/cliente/{id_cliente}/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public PedidoResult getAllPedidosByIdCliente(@PathVariable(value = "id_cliente") final Integer idCliente,
 			@PathVariable(value = "page_num") final Integer pageNum) {
 		return pedidoService.getAllByCliente(idCliente, PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@GetMapping(path = "/pedidos/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public PedidoResult getAllPedidos(@PathVariable(value = "page_num") final Integer pageNum) {
 		return pedidoService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@GetMapping(path = "/pedido/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<PedidoDTO> getPedido(@PathVariable(value = "id") final Integer id) {
 		try {
 			return ResponseEntity.ok(pedidoService.getById(id));
@@ -56,15 +61,16 @@ public class PedidoResource {
 	}
 
 	@PutMapping(path = "/pedido/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<PedidoDTO> updatePedido(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final PedidoDTO dto) {
 		return ResponseEntity.ok(pedidoService.update(id, dto));
 	}
 
 	@DeleteMapping(path = "/pedido/{id}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<PedidoDTO> deletePedido(@PathVariable(value = "id") final Integer id) {
-		pedidoService.deleteById(id);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(pedidoService.deleteById(id));
 	}
 
 }

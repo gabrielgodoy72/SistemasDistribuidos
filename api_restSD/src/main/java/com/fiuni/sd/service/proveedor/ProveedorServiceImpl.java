@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fiuni.sd.dao.IProveedorDao;
@@ -34,17 +33,12 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	private CacheManager cacheManager;
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #result.getId()")
 	public ProveedorDTO save(final ProveedorDTO dto) {
-		if(dto.getNombre().length() < 10) {
-			throw new RuntimeException();
-		}
 		return convertDomainToDto(proveedorDao.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	public ProveedorDTO getById(final Integer id) {
 		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
@@ -100,16 +94,17 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
+	public ProveedorDTO deleteById(final Integer id) {
 		if (!proveedorDao.existsById(id)) {
 			throw new ResourceNotFoundException("Proveedor", "id", id);
 		}
+		ProveedorDTO proveedor = convertDomainToDto(proveedorDao.getById(id));
 		proveedorDao.deleteById(id);
-		cacheManager.getCache(Setting.CACHE_NAME).evict("api_proveedor_" + id);
+		return proveedor;
 	}
 
 	@Override
-	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	public ProveedorDTO update(final Integer id, final ProveedorDTO dto) {
 		if (!proveedorDao.existsById(id)) {
@@ -118,6 +113,7 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("Proveedor", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_proveedor_" + id);
 		return convertDomainToDto(proveedorDao.save(convertDtoToDomain(dto)));
 	}
 

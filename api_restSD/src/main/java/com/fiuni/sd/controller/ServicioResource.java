@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class ServicioResource {
 	private IServicioService servicioService;
 
 	@PostMapping(path = "/servicio")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ServicioDTO> createServicio(@RequestBody @Valid final ServicioDTO servicioDto) {
 		try {
 			return ResponseEntity.ok(servicioService.save(servicioDto));
@@ -36,6 +38,7 @@ public class ServicioResource {
 	}
 
 	@GetMapping(path = "/servicio/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ServicioDTO> getServicio(@PathVariable(value = "id") final Integer id) {
 		try {
 			return ResponseEntity.ok(servicioService.getById(id));
@@ -45,6 +48,7 @@ public class ServicioResource {
 	}
 
 	@GetMapping(path = "/servicio/search/descripcion/{descripcion}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ResponseEntity<ServicioDTO> getServicioByDescripcion(
 			@PathVariable(value = "descripcion") final String descripcion) {
 		try {
@@ -55,11 +59,13 @@ public class ServicioResource {
 	}
 
 	@GetMapping(path = "/servicios/page/{page_num}")
+	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
 	public ServicioResult getServicios(@PathVariable(value = "page_num") final Integer pageNum) {
 		return servicioService.getAll(PageRequest.of(pageNum, Setting.PAGE_SIZE));
 	}
 
 	@PutMapping(path = "/servicio/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ServicioDTO> updateServicio(@PathVariable(value = "id") final Integer id,
 			@RequestBody @Valid final ServicioDTO servicioDto) {
 		try {
@@ -71,10 +77,10 @@ public class ServicioResource {
 	}
 
 	@DeleteMapping("/servicio/{id}")
+	@Secured({ "ROLE_ADMIN" })
 	public ResponseEntity<ServicioDTO> deleteServicio(@PathVariable(value = "id") final Integer id) {
 		try {
-			servicioService.deleteById(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok(servicioService.deleteById(id));
 		} catch (Exception ex) {
 			return ResponseEntity.notFound().build();
 		}

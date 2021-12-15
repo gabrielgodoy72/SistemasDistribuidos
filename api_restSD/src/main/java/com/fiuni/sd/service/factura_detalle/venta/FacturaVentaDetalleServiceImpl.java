@@ -1,8 +1,13 @@
 package com.fiuni.sd.service.factura_detalle.venta;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,7 @@ import com.fiuni.sd.dto.factura_detalle.venta.FacturaVentaDetalleDTO;
 import com.fiuni.sd.dto.factura_detalle.venta.FacturaVentaDetalleResult;
 import com.fiuni.sd.service.base.BaseServiceImpl;
 import com.fiuni.sd.utils.ResourceNotFoundException;
+import com.fiuni.sd.utils.Setting;
 
 @Service
 public class FacturaVentaDetalleServiceImpl
@@ -30,26 +36,40 @@ public class FacturaVentaDetalleServiceImpl
 	@Autowired
 	private IServicioDao servicioRepository; // repository
 
+	@Autowired
+	private CacheManager cacheManager;
+
 	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_facturaVentaDetalle_' + #result.getId()")
 	public FacturaVentaDetalleDTO save(final FacturaVentaDetalleDTO dto) {
 		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_facturaVentaDetalle_' + #id")
 	public FacturaVentaDetalleDTO getById(final Integer id) {
+		FacturaVentaDetalleDTO facturaVentaDetalleCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_facturaVentaDetalle_" + id, FacturaVentaDetalleDTO.class);
+		if (facturaVentaDetalleCacheado != null) {
+			return facturaVentaDetalleCacheado;
+		}
 		return repository.findById(id)//
 				.map(this::convertDomainToDto)//
-				.orElseThrow(() -> new ResourceNotFoundException("FacturaVentaDetalle", "id", id));
+				.orElseThrow();
 	}
 
 	@Override
 	public FacturaVentaDetalleResult getAllByFactura(final Integer idFactura, final Pageable pageable) {
+		final List<FacturaVentaDetalleDTO> list = new ArrayList<>();
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		Page<FacturaVentaDetalleDomain> pages = repository.findAllByFactura(facturaRepository.getById(idFactura), pageable);
-		result.setFacturasVentaDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByFactura(facturaRepository.getById(idFactura),
+				pageable);
+		pages.forEach(facturaVentaDetalle -> {
+			FacturaVentaDetalleDTO dto = convertDomainToDto(facturaVentaDetalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaVentaDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasVentaDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
@@ -57,12 +77,16 @@ public class FacturaVentaDetalleServiceImpl
 
 	@Override
 	public FacturaVentaDetalleResult getAllByServicio(final Integer idServicio, final Pageable pageable) {
+		final List<FacturaVentaDetalleDTO> list = new ArrayList<>();
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
-		Page<FacturaVentaDetalleDomain> pages = repository.findAllByServicio(servicioRepository.getById(idServicio), pageable);
-		result.setFacturasVentaDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		Page<FacturaVentaDetalleDomain> pages = repository.findAllByServicio(servicioRepository.getById(idServicio),
+				pageable);
+		pages.forEach(facturaVentaDetalle -> {
+			FacturaVentaDetalleDTO dto = convertDomainToDto(facturaVentaDetalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaVentaDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasVentaDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
@@ -71,25 +95,33 @@ public class FacturaVentaDetalleServiceImpl
 
 	@Override
 	public FacturaVentaDetalleResult getAll(final Pageable pageable) {
+		final List<FacturaVentaDetalleDTO> list = new ArrayList<>();
 		final FacturaVentaDetalleResult result = new FacturaVentaDetalleResult();
 		Page<FacturaVentaDetalleDomain> pages = repository.findAll(pageable);
-		result.setFacturasVentaDetalle(pages.getContent()//
-				.stream()//
-				.map(this::convertDomainToDto)//
-				.collect(Collectors.toList()));
+		pages.forEach(facturaVentaDetalle -> {
+			FacturaVentaDetalleDTO dto = convertDomainToDto(facturaVentaDetalle);
+			list.add(dto);
+			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaVentaDetalle_" + dto.getId(), dto);
+		});
+		result.setFacturasVentaDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
 		return result;
 	}
 
 	@Override
-	public void deleteById(final Integer id) {
+	@CacheEvict(value = Setting.CACHE_NAME, key = "'api_facturaVentaDetalle_' + #id")
+	public FacturaVentaDetalleDTO deleteById(final Integer id) {
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("FacturaVentaDetalle", "id", id);
 		}
+		FacturaVentaDetalleDTO detalle = convertDomainToDto(repository.getById(id));
 		repository.deleteById(id);
+		return detalle;
 	}
 
+	@Override
+	@CachePut(value = Setting.CACHE_NAME, key = "'api_facturaVentaDetalle_' + #id")
 	public FacturaVentaDetalleDTO update(final Integer id, final FacturaVentaDetalleDTO dto) {
 		if (!repository.existsById(id)) {
 			throw new ResourceNotFoundException("FacturaVentaDetalle", "id", id);
@@ -97,6 +129,7 @@ public class FacturaVentaDetalleServiceImpl
 		if (id != dto.getId()) {
 			throw new ResourceNotFoundException("FacturaVentaDetalle", "id", id);
 		}
+		cacheManager.getCache(Setting.CACHE_NAME).evict("api_facturaVentaDetalle_" + id);
 		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
 	}
 
