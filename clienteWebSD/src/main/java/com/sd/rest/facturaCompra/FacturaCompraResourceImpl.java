@@ -23,6 +23,7 @@ public class FacturaCompraResourceImpl extends BaseResourceImpl<FacturaCompraDTO
 
     @Override
     public FacturaCompraResult getAll(Integer page) {
+        setWebResourceBasicAuthFilter();
         final FacturaCompraResult result = getWebResource().path("/compra/page/" + page).get(FacturaCompraResult.class);
         result.getFacturasCompra().forEach(proveedor -> {
             cacheManager.getCache(Setting.CACHE_NAME).put("client_web_facturaCompra_" + proveedor.getId(), proveedor);
@@ -33,17 +34,20 @@ public class FacturaCompraResourceImpl extends BaseResourceImpl<FacturaCompraDTO
     @Override
     @CachePut(value = Setting.CACHE_NAME, key = "'client_web_facturaCompra_' + #result.getId()")
     public FacturaCompraDTO save(FacturaCompraDTO dto) {
+        setWebResourceBasicAuthFilter();
         return getWebResource().path("/compra").entity(dto).post(getDtoClass());
     }
 
     @Override
     @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_facturaCompra_' + #id")
     public FacturaCompraDTO getById(Integer id) {
+        setWebResourceBasicAuthFilter();
         return getWebResource().path("/compra/" + id).get(getDtoClass());
     }
 
     @Override
     public void delete(Integer id) {
+        setWebResourceBasicAuthFilter();
         getWebResource().path("/compra/" + id).delete();
         cacheManager.getCache(Setting.CACHE_NAME).evict("client_web_facturaCompra_" + id);
     }
@@ -52,6 +56,7 @@ public class FacturaCompraResourceImpl extends BaseResourceImpl<FacturaCompraDTO
     @CacheEvict(value = Setting.CACHE_NAME, key = "'client_web_facturaCompra_' + #id")
     @CachePut(value = Setting.CACHE_NAME, key = "'client_web_facturaCompra_' + #id")
     public FacturaCompraDTO update(Integer id, FacturaCompraDTO dto) {
+        setWebResourceBasicAuthFilter();
         return getWebResource().path("/compra/" + id).entity(dto).put(getDtoClass());
     }
 

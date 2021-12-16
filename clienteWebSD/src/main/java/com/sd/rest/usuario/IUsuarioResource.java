@@ -8,4 +8,6 @@ public interface IUsuarioResource extends IBaseResource<UsuarioDTO> {
 
     public UsuarioResult getAll(Integer page);
 
+    public UsuarioDTO getByUsername(String username);
+
 }

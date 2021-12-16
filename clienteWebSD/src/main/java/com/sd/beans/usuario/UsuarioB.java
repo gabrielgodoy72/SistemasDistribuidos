@@ -1,8 +1,10 @@
 package com.sd.beans.usuario;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sd.beans.base.BaseBean;
+import com.sd.beans.rol.RolB;
 import org.apache.commons.lang.StringUtils;
 
 public class UsuarioB extends BaseBean {
@@ -12,6 +14,7 @@ public class UsuarioB extends BaseBean {
     private String apellido;
     private String email;
     private String password;
+    private List<RolB> roles;
 
     public UsuarioB(Map<String, String> params){
         super(params);
@@ -33,6 +36,8 @@ public class UsuarioB extends BaseBean {
         return password;
     }
 
+    public List<RolB> getRoles(){ return roles; }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -49,6 +54,8 @@ public class UsuarioB extends BaseBean {
         this.password = password;
     }
 
+    public void setRoles(List<RolB> roles){ this.roles = roles; }
+
     @Override
     protected void create(Map<String, String> params) {
         if (!StringUtils.isBlank(params.get("id"))) {
@@ -58,5 +65,6 @@ public class UsuarioB extends BaseBean {
         setApellido(params.get("apellido"));
         setEmail(params.get("email"));
         setPassword(params.get("password"));
+        //setRoles(params.get("roles"));
     }
 }

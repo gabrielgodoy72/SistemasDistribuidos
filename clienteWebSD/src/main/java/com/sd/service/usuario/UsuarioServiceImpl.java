@@ -2,10 +2,12 @@ package com.sd.service.usuario;
 
 import com.fiuni.sd.dto.usuario.UsuarioDTO;
 import com.fiuni.sd.dto.usuario.UsuarioResult;
+import com.sd.beans.rol.RolB;
 import com.sd.beans.usuario.UsuarioB;
 import com.sd.beans.usuario.UsuarioBResult;
 import com.sd.rest.usuario.IUsuarioResource;
 import com.sd.service.base.BaseServiceImpl;
+import com.sd.service.rol.IRolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
 
     @Autowired
     private IUsuarioResource usuarioResource;
+
+    @Autowired
+    private IRolService rolService;
 
     @Override
     public UsuarioB save(UsuarioB bean) {
@@ -48,6 +53,11 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
+    public UsuarioB getUsuarioByUsername(String username) {
+        return convertDtoToBean(usuarioResource.getByUsername(username));
+    }
+
+    @Override
     public void delete(Integer id) {
         usuarioResource.delete(id);
     }
@@ -65,7 +75,13 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
         params.put("apellido", String.valueOf(dto.getApellido()));
         params.put("email", String.valueOf(dto.getEmail()));
         params.put("password", String.valueOf(dto.getPassword()));
-        return new UsuarioB(params);
+        final UsuarioB usuarioB = new UsuarioB(params);
+        final List<RolB> roles = new ArrayList<>();
+        dto.getRoles_id().forEach(id -> {
+            roles.add(rolService.getById(id));
+        });
+        usuarioB.setRoles(roles);
+        return usuarioB;
     }
 
     @Override
@@ -76,6 +92,12 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
         dto.setApellido(bean.getApellido());
         dto.setEmail(bean.getEmail());
         dto.setPassword(bean.getPassword());
+        final Set<Integer> roles_id = new HashSet<>();
+        bean.getRoles().forEach(rol -> {
+            roles_id.add(rol.getId());
+        });
+        dto.setRoles_id(roles_id);
         return dto;
     }
+
 }

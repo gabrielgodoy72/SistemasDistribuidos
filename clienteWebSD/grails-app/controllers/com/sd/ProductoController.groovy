@@ -2,7 +2,8 @@ package com.sd
 
 import com.sd.beans.producto.ProductoB
 import com.sd.service.producto.IProductoService
-import grails.validation.ValidationException
+import grails.plugin.springsecurity.annotation.Secured
+
 import static org.springframework.http.HttpStatus.*
 
 class ProductoController {
@@ -12,6 +13,7 @@ class ProductoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def index() {
         redirect(action: "list", params: params)
     }
@@ -22,6 +24,7 @@ class ProductoController {
 
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list(Integer id) {
         def params = params.toString()
         def page = Math.max(id?:1,0)
@@ -31,10 +34,12 @@ class ProductoController {
         [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal()]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def create() {
         [productoInstance: new ProductoB(params)]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def save() {
         def productoInstance = new ProductoB(params)
         def newProducto = productoService.save(productoInstance)
@@ -50,6 +55,7 @@ class ProductoController {
         redirect(action: "list")
     }
 
+    @Secured(['ROLE_ADMIN'])
     def update(Integer id) {
         def productoInstance = new ProductoB(params)
         if (id != productoInstance.getId()) {
@@ -72,6 +78,7 @@ class ProductoController {
         redirect(action: "list")
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
         def productoInstance
@@ -83,6 +90,7 @@ class ProductoController {
         [productoInstance: productoInstance]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def edit() {
         def id = Integer.valueOf(params['id'])
         def productoInstance = productoService.getById(id.toInteger())
@@ -98,6 +106,7 @@ class ProductoController {
         [productoInstance: productoInstance]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def delete() {
         def id = Integer.valueOf(params['id'])
         def productoInstance = productoService.getById(id)

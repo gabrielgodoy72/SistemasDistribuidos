@@ -18,7 +18,7 @@ public class UsuarioResourceImpl extends BaseResourceImpl<UsuarioDTO> implements
     private CacheManager cacheManager;
 
     public UsuarioResourceImpl() {
-        super(UsuarioDTO.class, "/api");
+        super(UsuarioDTO.class, "/account");
     }
 
     @Override
@@ -28,6 +28,12 @@ public class UsuarioResourceImpl extends BaseResourceImpl<UsuarioDTO> implements
             cacheManager.getCache(Setting.CACHE_NAME).put("client_web_usuario_" + usuario.getId(), usuario);
         });
         return result;
+    }
+
+    @Override
+    @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #nombre")
+    public UsuarioDTO getByUsername(String username) {
+        return getWebResource().path("/usuario/username/" + username).get(getDtoClass());
     }
 
     @Override
