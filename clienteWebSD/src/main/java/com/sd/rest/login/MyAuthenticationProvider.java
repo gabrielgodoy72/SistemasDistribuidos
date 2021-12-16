@@ -1,9 +1,5 @@
 package com.sd.rest.login;
 
-
-//import com.sd.clientsd.beans.user.RoleB;
-//import com.sd.clientsd.beans.user.UserB;
-//import com.sd.clientsd.service.user.IUserService;
 import com.sd.beans.rol.RolB;
 import com.sd.beans.usuario.UsuarioB;
 import com.sd.service.usuario.IUsuarioService;

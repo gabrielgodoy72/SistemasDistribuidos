@@ -54,16 +54,16 @@
     <div class="pagination">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                <li class="page-item <g:if test="${!prevPage}">disabled</g:if>">
+                    <a class="page-link" href="#" aria-label="Previous" >
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+                <g:each var="i" in="${ (0..< totalPages) }">
+                    <li class="page-item"><a class="page-link" href="#">${i}</a></li>
+                </g:each>
+                <li class="page-item <g:if test="${!nexPage}">disabled</g:if>">
+                    <a class="page-link" href="#" aria-label="Next" >
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -72,10 +72,7 @@
     </div>
 </div>
 <script>
-    for(int i = 0; i < ){
-        var li = `<li class="page-item ${page==currentPage?active:""}" ><g:link controller="producto" class="page-link" action="list" params="${i}" id="${i}">${i}</g:link></li>`
-        document.getElementById("pagination").insertAdjacentHTML("beforeend", li)
-    }
+
 </script>
 </body>
 </html>

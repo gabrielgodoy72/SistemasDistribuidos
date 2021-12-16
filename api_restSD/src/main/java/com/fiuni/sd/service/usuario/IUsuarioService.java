@@ -7,5 +7,7 @@ import com.fiuni.sd.service.base.IBaseService;
 public interface IUsuarioService extends IBaseService<UsuarioDTO, UsuarioResult> {
 
 	public UsuarioDTO update(final Integer id, final UsuarioDTO dto);
+	
+	public UsuarioDTO getByUsername(String username);
 
 }

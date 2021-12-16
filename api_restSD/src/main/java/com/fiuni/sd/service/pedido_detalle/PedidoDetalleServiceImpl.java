@@ -46,6 +46,17 @@ public class PedidoDetalleServiceImpl extends
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_pedidoDetalle_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_pedidoDetalle_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) repository.count();
+	}
+
+	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_pedidoDetalle_' + #id")
 	public PedidoDetalleDTO getById(final Integer id) {
 		PedidoDetalleDTO pedidoDetalleCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
@@ -120,6 +131,9 @@ public class PedidoDetalleServiceImpl extends
 		result.setPedidosDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) repository.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

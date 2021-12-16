@@ -28,6 +28,9 @@ public class FacturaCompraServiceImpl extends
 
 	@Autowired
 	private IFacturaCompraDao repository; // repository
+	
+	@Autowired
+	private IFacturaCompraDao facturaDetalleRepository; // repository
 
 	@Autowired
 	private IProveedorDao proveedorRepository; // repository
@@ -39,6 +42,17 @@ public class FacturaCompraServiceImpl extends
 	@CachePut(value = Setting.CACHE_NAME, key = "'api_facturaCompra_' + #result.getId()")
 	public FacturaCompraDTO save(FacturaCompraDTO dto) {
 		return convertDomainToDto(repository.save(convertDtoToDomain(dto)));
+	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_facturaCompra_' + count")
+	public Integer count() {
+		Integer countCacheada = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_facturaCompra_count", Integer.class);
+		if (countCacheada != null) {
+			return countCacheada;
+		}
+		return (int) repository.count();
 	}
 
 	@Override
@@ -106,6 +120,7 @@ public class FacturaCompraServiceImpl extends
 		final FacturaCompraResult result = new FacturaCompraResult();
 		Page<FacturaCompraDomain> pages = repository.findAll(pageable);
 		pages.forEach(factura -> {
+			//factura.setTotal(facturaDetalleRepository.);
 			FacturaCompraDTO dto = convertDomainToDto(factura);
 			list.add(dto);
 			cacheManager.getCache(Setting.CACHE_NAME).put("api_facturaCompra_" + dto.getId(), dto);
@@ -113,6 +128,9 @@ public class FacturaCompraServiceImpl extends
 		result.setFacturasCompra(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) repository.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

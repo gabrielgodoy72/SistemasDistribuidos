@@ -8,4 +8,8 @@ public interface IFacturaCompraDetalleResource extends IBaseResource<FacturaComp
 
     public FacturaCompraDetalleResult getAll(Integer page);
 
+    public FacturaCompraDetalleResult getAllByFactura(Integer ifFactura, Integer page);
+
+    public FacturaCompraDetalleResult getAllByProducto(Integer idProducto, Integer page);
+
 }

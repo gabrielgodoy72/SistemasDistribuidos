@@ -35,6 +35,17 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 	public ProductoDTO save(final ProductoDTO dto) {
 		return convertDomainToDto(productoDao.save(convertDtoToDomain(dto)));
 	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_producto_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_producto_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) productoDao.count();
+	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_producto_' + #id")
@@ -62,6 +73,9 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoDTO, ProductoDo
 		result.setProductos(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) productoDao.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

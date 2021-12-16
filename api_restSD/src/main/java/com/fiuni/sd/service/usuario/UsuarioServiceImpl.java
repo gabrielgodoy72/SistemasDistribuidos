@@ -1,6 +1,7 @@
 package com.fiuni.sd.service.usuario;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +57,17 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		user.setRoles(Set.of(rolDao.findByDescripcion("ROLE_USER").orElseThrow())); // por defecto es ROLE_USER
 		return convertDomainToDto(userDao.save(user));
 	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_usuario_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_usuario_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) userDao.count();
+	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_usuario_' + #id")
@@ -66,6 +78,19 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 			return usuarioCacheado;
 		}
 		return userDao.findById(id)//
+				.map(this::convertDomainToDto)//
+				.orElseThrow();
+	}
+
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_usuario_' + #username")
+	public UsuarioDTO getByUsername(final String username) {
+		UsuarioDTO usuarioCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_usuario_" + username, UsuarioDTO.class);
+		if (usuarioCacheado != null) {
+			return usuarioCacheado;
+		}
+		return userDao.findByUsername(username)//
 				.map(this::convertDomainToDto)//
 				.orElseThrow();
 	}
@@ -83,6 +108,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		result.setUsers(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) userDao.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 
@@ -118,6 +146,14 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		dto.setApellido(domain.getApellido());
 		dto.setEmail(domain.getEmail());
 		dto.setUsername(domain.getUsername());
+		dto.setPassword(domain.getPassword());
+		Set<Integer> roles_id = new HashSet<>();
+		// llama a roles para traer los roles del usuario
+		// rolDao.ge
+		domain.getRoles().forEach(rol -> {
+			roles_id.add(rol.getId());
+		});
+		dto.setRoles_id(roles_id);
 		return dto;
 	}
 
@@ -130,6 +166,12 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioDTO, UsuarioDomai
 		domain.setEmail(dto.getEmail());
 		domain.setUsername(dto.getUsername());
 		domain.setPassword(dto.getPassword());
+		Set<RoleDomain> roles = new HashSet<>();
+		// llama a roles para traer los roles del usuario
+		dto.getRoles_id().forEach(rol_id -> {
+			roles.add(rolDao.getById(rol_id));
+		});
+		domain.setRoles(roles);
 		return domain;
 	}
 

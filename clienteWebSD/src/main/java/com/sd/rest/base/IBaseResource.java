@@ -8,7 +8,7 @@ public interface IBaseResource<DTO extends BaseDTO> {
 
     public DTO getById(Integer id);
 
-    public void delete(Integer id);
+    public DTO delete(Integer id);
 
     public DTO update(Integer id, DTO dto);
 

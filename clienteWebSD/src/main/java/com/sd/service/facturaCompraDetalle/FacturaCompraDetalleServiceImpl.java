@@ -50,14 +50,37 @@ public class FacturaCompraDetalleServiceImpl extends BaseServiceImpl<FacturaComp
         return facturaCompraDetalleBResult;
     }
 
+    public FacturaCompraDetalleBResult getAllByFactura(Integer idFactura, Integer page){
+        final FacturaCompraDetalleBResult facturaCompraDetalleBResult = new FacturaCompraDetalleBResult();
+        final FacturaCompraDetalleResult result = facturaCompraDetalleResource.getAllByFactura(idFactura, page);
+        if(result.getFacturasCompraDetalle() == null) {
+            facturaCompraDetalleBResult.setFacturasCompraDetalle(Collections.emptyList());
+        } else {
+            List<FacturaCompraDetalleB> list = new ArrayList<>();
+            result.getFacturasCompraDetalle().forEach(detalle -> {
+                FacturaCompraDetalleB bean = convertDtoToBean(detalle);
+                list.add(bean);
+            });
+            facturaCompraDetalleBResult.setFacturasCompraDetalle(list);
+            facturaCompraDetalleBResult.setPage(result.getPage());
+            facturaCompraDetalleBResult.setTotalPages(result.getTotalPages());
+            facturaCompraDetalleBResult.setTotal(result.getTotal());
+            facturaCompraDetalleBResult.setHasPrev(result.get_hasPrev());
+            facturaCompraDetalleBResult.setHasNext(result.get_hasNext());
+            facturaCompraDetalleBResult.setPrevPage(result.getPrevPage());
+            facturaCompraDetalleBResult.setNextPage(result.getNextPage());
+        }
+        return facturaCompraDetalleBResult;
+    }
+
     @Override
     public FacturaCompraDetalleB getById(Integer id) {
         return convertDtoToBean(facturaCompraDetalleResource.getById(id));
     }
 
     @Override
-    public void delete(Integer id) {
-        facturaCompraDetalleResource.delete(id);
+    public FacturaCompraDetalleB delete(Integer id) {
+        return convertDtoToBean(facturaCompraDetalleResource.delete(id));
     }
 
     @Override

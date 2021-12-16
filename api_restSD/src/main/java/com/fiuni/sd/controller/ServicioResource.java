@@ -36,6 +36,16 @@ public class ServicioResource {
 			return ResponseEntity.badRequest().build();
 		}
 	}
+	
+	@GetMapping(path = "/servicios/count")
+	@Secured({ "ROLE_ADMIN" })
+	public ResponseEntity<Integer> count() {
+		try {
+			return ResponseEntity.ok(servicioService.count());
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 	@GetMapping(path = "/servicio/{id}")
 	@Secured({ "ROLE_ADMIN" })

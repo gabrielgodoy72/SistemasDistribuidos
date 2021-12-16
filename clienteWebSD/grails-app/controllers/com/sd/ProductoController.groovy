@@ -29,9 +29,9 @@ class ProductoController {
         def params = params.toString()
         def page = Math.max(id?:1,0)
         def productos = productoService.getAll(page)
-        System.out.println("PARAMS: " + params)
-        System.out.println("total pages: " + productos.getTotalPages())
-        [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal()]
+        [productoInstanceList: productos.getList(), productoIntanceTotal: productos.getTotal(),
+         totalPages: productos.getTotalPages(), currentPage: productos.getPage(),
+         nexPage: productos.getHasNext(),prevPage: productos.getHasPrev()]
     }
 
     @Secured(['ROLE_ADMIN'])

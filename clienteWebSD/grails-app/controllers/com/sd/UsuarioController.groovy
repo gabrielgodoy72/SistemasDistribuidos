@@ -2,20 +2,26 @@ package com.sd
 
 import com.sd.beans.usuario.UsuarioB
 import com.sd.service.usuario.IUsuarioService
+import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.ValidationException
+import org.springframework.beans.factory.annotation.Autowired
+
 import static org.springframework.http.HttpStatus.*
 
 class UsuarioController {
 
     //services
+    @Autowired
     IUsuarioService usuarioService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def index() {
         redirect(action: "list", params: params)
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list(Integer id) {
         def page = Math.max(id?:0,0)
         def usuarios = usuarioService.getAll(page)
@@ -23,10 +29,12 @@ class UsuarioController {
         [usuarioInstanceList: usuarios.getList(), usuarioIntanceTotal: usuarios.getTotal()]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def create() {
         [usuarioInstance: new UsuarioB(params)]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def save() {
         def usuarioInstance = new UsuarioB(params)
         def newUsuario = usuarioService.save(usuarioInstance)
@@ -42,6 +50,7 @@ class UsuarioController {
         redirect(action: "list")
     }
 
+    @Secured(['ROLE_ADMIN'])
     def update(Integer id) {
         def usuarioInstance = new UsuarioB(params)
         if (id != usuarioInstance.getId()) {
@@ -64,6 +73,7 @@ class UsuarioController {
         redirect(action: "list")
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() { // si no encuentra deberia llevar a la pag de not found 404
         def id = Integer.valueOf(params['id'])
         def usuarioInstance
@@ -75,6 +85,7 @@ class UsuarioController {
         [usuarioInstance: usuarioInstance]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def edit() {
         def id = Integer.valueOf(params['id'])
         def usuarioInstance = usuarioService.getById(id.toInteger())
@@ -90,6 +101,7 @@ class UsuarioController {
         [usuarioInstance: usuarioInstance]
     }
 
+    @Secured(['ROLE_ADMIN'])
     def delete() {
         def id = Integer.valueOf(params['id'])
         def usuarioInstance = usuarioService.getById(id)

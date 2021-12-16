@@ -43,6 +43,10 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
             usuarioBResult.setPage(result.getPage());
             usuarioBResult.setTotalPages(result.getTotalPages());
             usuarioBResult.setTotal(result.getTotal());
+            usuarioBResult.setHasPrev(result.get_hasPrev());
+            usuarioBResult.setHasNext(result.get_hasNext());
+            usuarioBResult.setPrevPage(result.getPrevPage());
+            usuarioBResult.setNextPage(result.getNextPage());
         }
         return usuarioBResult;
     }
@@ -58,8 +62,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioB, UsuarioDTO> im
     }
 
     @Override
-    public void delete(Integer id) {
-        usuarioResource.delete(id);
+    public UsuarioB delete(Integer id) {
+        return convertDtoToBean(usuarioResource.delete(id));
     }
 
     @Override

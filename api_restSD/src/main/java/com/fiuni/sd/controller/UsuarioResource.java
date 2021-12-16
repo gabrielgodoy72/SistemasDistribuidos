@@ -45,6 +45,15 @@ public class UsuarioResource {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@GetMapping(path = "/usuario/search/username/{username}")
+	public ResponseEntity<UsuarioDTO> getUsuarioByUsername(@PathVariable(value = "username") final String username) {
+		try {
+			return ResponseEntity.ok(usuarioService.getByUsername(username));
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 	@GetMapping(path = "/usuarios/page/{page_num}")
 	public UsuarioResult getUsuarios(@PathVariable(value = "page_num") final Integer pageNum) {

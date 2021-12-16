@@ -35,6 +35,17 @@ public class ClienteServiceImpl extends BaseServiceImpl<ClienteDTO, ClienteDomai
 	public ClienteDTO save(final ClienteDTO dto) {
 		return convertDomainToDto(clientDao.save(convertDtoToDomain(dto)));
 	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_cliente_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_cliente_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) clientDao.count();
+	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_cliente_' + #id")
@@ -62,6 +73,9 @@ public class ClienteServiceImpl extends BaseServiceImpl<ClienteDTO, ClienteDomai
 		result.setClientes(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) clientDao.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

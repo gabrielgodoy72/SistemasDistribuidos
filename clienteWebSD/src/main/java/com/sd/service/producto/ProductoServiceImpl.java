@@ -38,6 +38,10 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
             productoBResult.setPage(result.getPage());
             productoBResult.setTotalPages(result.getTotalPages());
             productoBResult.setTotal(result.getTotal());
+            productoBResult.setHasPrev(result.get_hasPrev());
+            productoBResult.setHasNext(result.get_hasNext());
+            productoBResult.setPrevPage(result.getPrevPage());
+            productoBResult.setNextPage(result.getNextPage());
         }
         return productoBResult;
     }
@@ -48,8 +52,8 @@ public class ProductoServiceImpl extends BaseServiceImpl<ProductoB, ProductoDTO>
     }
 
     @Override
-    public void delete(Integer id) {
-        productoResource.delete(id);
+    public ProductoB delete(Integer id) {
+        return convertDtoToBean(productoResource.delete(id));
     }
 
     @Override

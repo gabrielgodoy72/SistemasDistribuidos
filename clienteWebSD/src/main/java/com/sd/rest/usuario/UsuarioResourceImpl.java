@@ -31,33 +31,45 @@ public class UsuarioResourceImpl extends BaseResourceImpl<UsuarioDTO> implements
     }
 
     @Override
-    @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #nombre")
+    @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #username")
     public UsuarioDTO getByUsername(String username) {
-        return getWebResource().path("/usuario/username/" + username).get(getDtoClass());
+        UsuarioDTO usuarioCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+                .get("client_web_usuario_" + username, getDtoClass());
+        if (usuarioCacheado != null) {
+            return usuarioCacheado;
+        }
+        return getWebResource().path("/usuario/search/username/" + username).get(getDtoClass());
     }
 
     @Override
     @CachePut(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #result.getId()")
     public UsuarioDTO save(UsuarioDTO dto) {
-        return getWebResource().path("/usuario").entity(dto).post(getDtoClass());
+        return getWebResource().path("/register").entity(dto).post(getDtoClass());
     }
 
     @Override
     @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #id")
     public UsuarioDTO getById(Integer id) {
+        UsuarioDTO usuarioCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+                .get("client_web_usuario_" + id, getDtoClass());
+        if (usuarioCacheado != null) {
+            return usuarioCacheado;
+        }
         return getWebResource().path("/usuario/" + id).get(getDtoClass());
     }
 
     @Override
-    public void delete(Integer id) {
+    @CacheEvict(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #id")
+    public UsuarioDTO delete(Integer id) {
+        UsuarioDTO usuario = getById(id);
         getWebResource().path("/usuario/" + id).delete();
-        cacheManager.getCache(Setting.CACHE_NAME).evict("client_web_usuario_" + id);
+        return usuario;
     }
 
     @Override
-    @CacheEvict(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #id")
     @CachePut(value = Setting.CACHE_NAME, key = "'client_web_usuario_' + #id")
     public UsuarioDTO update(Integer id, UsuarioDTO dto) {
+        cacheManager.getCache(Setting.CACHE_NAME).evict("client_web_usuario_" + id);
         return getWebResource().path("/usuario/" + id).entity(dto).put(getDtoClass());
     }
 

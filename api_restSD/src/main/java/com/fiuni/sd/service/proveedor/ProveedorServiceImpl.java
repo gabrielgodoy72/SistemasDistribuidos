@@ -39,6 +39,17 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_proveedor_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) proveedorDao.count();
+	}
+	
+	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_proveedor_' + #id")
 	public ProveedorDTO getById(final Integer id) {
 		ProveedorDTO proveedorCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
@@ -90,6 +101,9 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorDTO, Proveedo
 		result.setProveedores(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) proveedorDao.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

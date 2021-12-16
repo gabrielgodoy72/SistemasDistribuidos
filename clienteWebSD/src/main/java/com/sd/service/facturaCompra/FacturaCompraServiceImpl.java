@@ -38,6 +38,7 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
         final FacturaCompraBResult facturaCompraBResult = new FacturaCompraBResult();
         final FacturaCompraResult result = facturaCompraResource.getAll(page);
         if(result.getFacturasCompra() == null) {
+            System.out.println();
             facturaCompraBResult.setFacturaCompra(Collections.emptyList());
         } else {
             List<FacturaCompraB> list = new ArrayList<>();
@@ -49,6 +50,10 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
             facturaCompraBResult.setPage(result.getPage());
             facturaCompraBResult.setTotalPages(result.getTotalPages());
             facturaCompraBResult.setTotal(result.getTotal());
+            facturaCompraBResult.setHasPrev(result.get_hasPrev());
+            facturaCompraBResult.setHasNext(result.get_hasNext());
+            facturaCompraBResult.setPrevPage(result.getPrevPage());
+            facturaCompraBResult.setNextPage(result.getNextPage());
         }
         return facturaCompraBResult;
     }
@@ -59,8 +64,8 @@ public class FacturaCompraServiceImpl extends BaseServiceImpl<FacturaCompraB, Fa
     }
 
     @Override
-    public void delete(Integer id) {
-        facturaCompraResource.delete(id);
+    public FacturaCompraB delete(Integer id) {
+        return convertDtoToBean(facturaCompraResource.delete(id));
     }
 
     @Override

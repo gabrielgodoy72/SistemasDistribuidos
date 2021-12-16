@@ -1,5 +1,7 @@
 package com.fiuni.sd.dto.usuario;
 
+import java.util.Set;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -31,6 +33,8 @@ public class UsuarioDTO extends BaseDTO {
 	@NotNull
 	@NotEmpty
 	private String password;
+	
+	private Set<Integer> roles_id;
 
 	public String getNombre() {
 		return nombre;
@@ -71,5 +75,14 @@ public class UsuarioDTO extends BaseDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Set<Integer> getRoles_id() {
+		return roles_id;
+	}
+
+	public void setRoles_id(Set<Integer> roles_id) {
+		this.roles_id = roles_id;
+	}
+	
 
 }

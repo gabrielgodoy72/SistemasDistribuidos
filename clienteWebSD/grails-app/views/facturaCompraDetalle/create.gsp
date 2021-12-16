@@ -1,37 +1,62 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: godoy
+  Date: 13/12/2021
+  Time: 11:40
+--%>
 
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<head>
-    <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'facturaCompra.label', default: 'Factura Compra')}" />
-    <title><g:message code="default.create.label" args="[entityName]" /></title>
-</head>
-<body>
-<div class="nav" role="navigation">
-    <ul>
-        <li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-    </ul>
-</div>
-<div id="create-facturaCompra" class="content scaffold-create" role="main">
-    <h1><g:message code="default.create.label" args="[entityName]" /></h1>
-    <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
-    </g:if>
-    <g:hasErrors bean="${facturaCompraInstance}">
-        <ul class="errors" role="alert">
-            <g:eachError bean="${facturaCompraInstance}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-            </g:eachError>
-        </ul>
-    </g:hasErrors>
-    <g:form action="save" >
-        <fieldset class="form">
-            <g:render template="form"/>
-        </fieldset>
-        <fieldset class="buttons">
-            <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
-        </fieldset>
-    </g:form>
-</div>
-</body>
+    <head>
+        <meta name="layout" content="main">
+        <title>Agregar un Detalle</title>
+    </head>
+    <body>
+        <h1>Agregar Items a la Factura</h1>
+        <g:form action="save" >
+            <div class="row align-items-start">
+                <div class="col">
+                    <label for="factura">Número de Factura</label>
+                    <g:textField class="form-control"
+                                 type="text"
+                                 name="factura"
+                                 value="${detalle?.factura.numero}"
+                                 disabled="true"/>
+                </div>
+                <div class="col">
+                    <label for="proveedor">Nombre del Proveedor</label>
+                    <g:textField class="form-control"
+                                 type="text"
+                                 name="proveedor"
+                                 value="${detalle?.factura.proveedor.nombre}"
+                                 disabled="true"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="producto">Producto</label>
+                    <g:select class="form-control"
+                              id="producto"
+                              name="productoId"
+                              from="${productos}"
+                              optionKey="id"
+                              optionValue="descripcion"
+                              value="${detalle?.producto?.id}" />
+                </div>
+                <div class="col">
+                    <label for="cantidad">Cantidad</label>
+                    <g:textField class="form-control"
+                                 type="text"
+                                 name="cantidad"
+                                 value="${detalle?.cantidad}"
+                                 autoComplete="off"/>
+                </div>
+                <div class="col pt-4">
+                    <g:hiddenField name="facturaId" value="${detalle?.factura.id}"/>
+                    <g:actionSubmit class="btn btn-primary" action="save" value="Agregar"/>
+                </div>
+            </div>
+        </g:form>
+    </body>
 </html>

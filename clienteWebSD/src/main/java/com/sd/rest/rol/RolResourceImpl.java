@@ -33,12 +33,22 @@ public class RolResourceImpl extends BaseResourceImpl<RolDTO> implements IRolRes
     @Override
     @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #nombre")
     public RolDTO getByNombre(String nombre) {
+        RolDTO rolCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+                .get("client_web_rol_" + nombre, getDtoClass());
+        if (rolCacheado != null) {
+            return rolCacheado;
+        }
         return getWebResource().path("/rol/search/nombre/" + nombre).get(getDtoClass());
     }
 
     @Override
     @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #descripcion")
     public RolDTO getByDescripcion(String descripcion) {
+        RolDTO rolCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+                .get("client_web_rol_" + descripcion, getDtoClass());
+        if (rolCacheado != null) {
+            return rolCacheado;
+        }
         return getWebResource().path("/rol/search/descripcion/" + descripcion).get(getDtoClass());
     }
 
@@ -51,19 +61,26 @@ public class RolResourceImpl extends BaseResourceImpl<RolDTO> implements IRolRes
     @Override
     @Cacheable(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #id")
     public RolDTO getById(Integer id) {
+        RolDTO rolCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+                .get("client_web_rol_" + id, getDtoClass());
+        if (rolCacheado != null) {
+            return rolCacheado;
+        }
         return getWebResource().path("/rol/" + id).get(getDtoClass());
     }
 
     @Override
-    public void delete(Integer id) {
+    @CacheEvict(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #id")
+    public RolDTO delete(Integer id) {
+        RolDTO rol = getById(id);
         getWebResource().path("/rol/" + id).delete();
-        cacheManager.getCache(Setting.CACHE_NAME).evict("client_web_rol_" + id);
+        return rol;
     }
 
     @Override
-    @CacheEvict(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #id")
     @CachePut(value = Setting.CACHE_NAME, key = "'client_web_rol_' + #id")
     public RolDTO update(Integer id, RolDTO dto) {
+        cacheManager.getCache(Setting.CACHE_NAME).evict("client_web_rol_" + id);
         return getWebResource().path("/rol/" + id).entity(dto).put(getDtoClass());
     }
 

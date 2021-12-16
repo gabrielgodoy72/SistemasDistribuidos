@@ -38,6 +38,10 @@ public class RolServiceImpl extends BaseServiceImpl<RolB, RolDTO> implements IRo
             rolBResult.setPage(result.getPage());
             rolBResult.setTotalPages(result.getTotalPages());
             rolBResult.setTotal(result.getTotal());
+            rolBResult.setHasPrev(result.get_hasPrev());
+            rolBResult.setHasNext(result.get_hasNext());
+            rolBResult.setPrevPage(result.getPrevPage());
+            rolBResult.setNextPage(result.getNextPage());
         }
         return rolBResult;
     }
@@ -58,8 +62,8 @@ public class RolServiceImpl extends BaseServiceImpl<RolB, RolDTO> implements IRo
     }
 
     @Override
-    public void delete(Integer id) {
-        rolResource.delete(id);
+    public RolB delete(Integer id) {
+        return convertDtoToBean(rolResource.delete(id));
     }
 
     @Override

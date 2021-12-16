@@ -45,6 +45,17 @@ public class FacturaCompraDetalleServiceImpl
 		dto.setSubtotal(productoRepository.getById(dto.getProducto_id()).getCosto() * dto.getCantidad());
 		return convertDomainToDto(facturaCompraDetalleRepository.save(convertDtoToDomain(dto)));
 	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_facturaCompraDetalle_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) facturaCompraDetalleRepository.count();
+	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_facturaCompraDetalle_' + #id")
@@ -73,6 +84,9 @@ public class FacturaCompraDetalleServiceImpl
 		result.setFacturasCompraDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) facturaCompraDetalleRepository.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 
@@ -106,6 +120,9 @@ public class FacturaCompraDetalleServiceImpl
 		result.setFacturasCompraDetalle(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) facturaCompraDetalleRepository.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

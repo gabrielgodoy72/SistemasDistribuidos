@@ -34,6 +34,17 @@ public class RolServiceImpl extends BaseServiceImpl<RolDTO, RoleDomain, RolResul
 	public RolDTO save(final RolDTO dto) {
 		return convertDomainToDto(rolDao.save(convertDtoToDomain(dto)));
 	}
+	
+	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_rol_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_rol_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) rolDao.count();
+	}
 
 	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_rol_' + #id")
@@ -87,6 +98,9 @@ public class RolServiceImpl extends BaseServiceImpl<RolDTO, RoleDomain, RolResul
 		result.setRoles(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) rolDao.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

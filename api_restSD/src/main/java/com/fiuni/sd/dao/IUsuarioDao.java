@@ -13,6 +13,8 @@ import com.fiuni.sd.domain.credenciales.UsuarioDomain;
 public interface IUsuarioDao extends JpaRepository<UsuarioDomain, Integer> {
 
 	public Page<UsuarioDomain> findAll(Pageable pageable);
+	
+	public Optional<UsuarioDomain> findByNombre(String nombre);
 
 	public Optional<UsuarioDomain> findByEmail(String email);
 

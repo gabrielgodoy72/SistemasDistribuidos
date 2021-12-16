@@ -33,6 +33,10 @@ html * {
     margin: 0;
 }
 
+.controller {
+    margin-right: 5px;
+}
+
 body {
     background-color: #F5F5F5;
     color: #333333;

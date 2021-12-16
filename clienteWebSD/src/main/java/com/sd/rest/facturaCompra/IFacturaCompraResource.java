@@ -8,4 +8,8 @@ public interface IFacturaCompraResource extends IBaseResource<FacturaCompraDTO> 
 
     public FacturaCompraResult getAll(Integer page);
 
+    public FacturaCompraResult getAllByProveedor(Integer idProveedor, Integer page);
+
+    public FacturaCompraDTO getByNumero(String numero);
+
 }

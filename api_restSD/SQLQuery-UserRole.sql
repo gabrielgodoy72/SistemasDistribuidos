@@ -9,5 +9,4 @@ INSERT INTO user_role(user_id, role_id) VALUES (6, 1);
 SELECT * FROM usuarios
 SELECT * FROM roles
 SELECT * FROM user_role
-SELECT * FROM productos
-SELECT * FROM servicios
+

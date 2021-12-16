@@ -4,9 +4,11 @@ import com.sd.beans.facturaCompraDetalle.FacturaCompraDetalleB
 import com.sd.service.facturaCompra.IFacturaCompraService
 import com.sd.service.facturaCompraDetalle.IFacturaCompraDetalleService
 import com.sd.service.producto.IProductoService
+import grails.plugin.springsecurity.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 
+@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 class FacturaCompraDetalleController {
 
     //services
@@ -17,135 +19,67 @@ class FacturaCompraDetalleController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index() {
-        redirect(action: "list", params: params)
+        redirect(action: "notFound")
     }
 
-    def list(Integer id) {
-        def page = Math.max(id?:0,0)
-        def facturasCompraDetalle = facturaCompraDetalleService.getAll(page)
-        facturasCompraDetalle.getList().forEach({ fd -> System.out.println(fd.subtotal) })
-        [facturaCompraDetalleInstanceList: facturasCompraDetalle.getList(),
-         facturaCompraDetalleIntanceTotal: facturasCompraDetalle.getTotal(),
-         totalPages:facturasCompraDetalle.getTotalPages(),
-         currentPage:facturasCompraDetalle.getPage()]
-    }
-
-    def create() {
-        def facturasDetalle = facturaCompraService.getAll(0)
+    def create(Integer id) {    //CORREGIDO
+        def detalle = new FacturaCompraDetalleB(params)
+        def factura = facturaCompraService.getById(id)
         def productos = productoService.getAll(1)
-        [facturaCompraDetalleInstance: new FacturaCompraDetalleB(params),
-         facturasCompra: facturasDetalle.getList(),
-         productos: productos.getList()]
+        detalle.setFactura(factura)
+        [detalle: detalle, productos: productos.getList(), from: params['from']]
     }
 
-    def save() {
-        def facturaCompraDetalleInstance = new FacturaCompraDetalleB(params)
-        facturaCompraDetalleInstance.setProducto(productoService.getById(Integer.valueOf(params.productoId)))
-        facturaCompraDetalleInstance.setFactura(facturaCompraService.getById(Integer.valueOf(params.facturaCompraId)))
-        def newFacturaCompraDetalle = facturaCompraDetalleService.save(facturaCompraDetalleInstance)
-        if (!newFacturaCompraDetalle?.getId()) {
-            render(view: "create", model: [facturaCompraDetalleInstance: facturaCompraDetalleInstance])
-            return
-        }
-
-        flash.message = message(code: 'default.created.message', args: [
-                message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                newFacturaCompraDetalle.getId()
-        ])
-        redirect(action: "list")
+    def save() {    //CORREGIDO
+        def detalle = new FacturaCompraDetalleB(params)
+        def producto = productoService.getById(Integer.valueOf(params.productoId))
+        def factura = facturaCompraService.getById(Integer.valueOf(params.facturaId))
+        detalle.setProducto(producto)
+        detalle.setFactura(factura)
+        detalle.setSubtotal(producto.getCosto() * detalle.getCantidad())
+        factura.setTotal(factura.getTotal() + detalle.getSubtotal())
+        facturaCompraDetalleService.save(detalle)
+        facturaCompraService.update(factura.getId(), factura)
+        redirect(action: "show", controller: "facturaCompra", params: [id: factura.getId()])
     }
 
-    def update(Integer id) {
-        def facturaCompraDetalleInstance = new FacturaCompraDetalleB(params)
-        facturaCompraDetalleInstance.setProducto(productoService.getById(Integer.valueOf(params.productoId)))
-        facturaCompraDetalleInstance.setFactura(facturaCompraService.getById(Integer.valueOf(params.facturaCompraId)))
-        def cantidad = facturaCompraDetalleInstance.getCantidad();
-        def costo = facturaCompraDetalleInstance.getProducto().getCosto();
-        facturaCompraDetalleInstance.setSubtotal(cantidad * costo );
-        if (id != facturaCompraDetalleInstance.getId()) {
-            flash.message = message(code: 'default.not.equal.message', args: [
-                    message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                    id
-            ])
-        }
-
-        def newFacturaCompraDetalle = facturaCompraDetalleService.update(id, facturaCompraDetalleInstance)
-        if (!newFacturaCompraDetalle?.getId()) {
-            render(view: "create", model: [facturaCompraDetalleInstance: facturaCompraDetalleInstance])
-            return
-        }
-
-        flash.message = message(code: 'default.updated.message', args: [
-                message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                newFacturaCompraDetalle.getId()
-        ])
-        redirect(action: "list")
-    }
-
-    def show() { // si no encuentra deberia llevar a la pag de not found 404
+    def edit() {    //CORREGIDO
         def id = Integer.valueOf(params['id'])
-        def facturaCompraDetalleInstance
-        def producto
-        def facturaCompra
+        def detalle = facturaCompraDetalleService.getById(id)
+        def productos = productoService.getAll(1)
+        [detalle: detalle, productos: productos.getList()]
+    }
+
+    def update() {  //CORREGIDO
+        def id = Integer.valueOf(params['id'])
+        FacturaCompraDetalleB detalleAnterior
         try {
-            facturaCompraDetalleInstance = facturaCompraDetalleService.getById(id.toInteger())
-            producto = facturaCompraDetalleInstance.getProducto()
-            facturaCompra = facturaCompraDetalleInstance.getFactura()
-        } catch (Exception ex) {
-            redirect(action: "notFound")
-        }
-        [facturaCompraDetalleInstance: facturaCompraDetalleInstance,
-         productos: producto,
-         facturasCompra: facturaCompra]
+            detalleAnterior = facturaCompraDetalleService.getById(id)
+        } catch(Exception ex){ redirect(action: "notFound") }
+        def detalle = new FacturaCompraDetalleB(params)
+        def producto = productoService.getById(Integer.valueOf(params.productoId))
+        def factura = detalleAnterior.getFactura()
+        detalle.setProducto(producto)
+        detalle.setFactura(factura)
+        detalle.setSubtotal(producto.getCosto() * detalle.getCantidad())
+        factura.setTotal((factura.getTotal() - detalleAnterior.getSubtotal()) + detalle.getSubtotal())
+        facturaCompraDetalleService.update(detalle.getId(), detalle)
+        facturaCompraService.update(factura.getId(), factura)
+        redirect(action: "edit", controller: "facturaCompra", params: [id: factura.getId()])
     }
 
-    def edit() {
+    def delete() {  //CORREGIDO
         def id = Integer.valueOf(params['id'])
-        def facturaCompraDetalleInstance = facturaCompraDetalleService.getById(id.toInteger())
-        def productos = productoService.getAll(1)
-        def facturasCompra = facturaCompraService.getAll(0)
-        if (!facturaCompraDetalleInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [
-                    message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                    id
-            ])
-            redirect(action: "list")
-            return
-        }
-
-
-        [facturaCompraDetalleInstance: facturaCompraDetalleInstance,
-         productos: productos.getList(),
-         facturasCompra: facturasCompra.getList()]
-    }
-
-    def delete() {
-        def id = Integer.valueOf(params['id'])
-        def facturaCompraDetalleInstance = facturaCompraDetalleService.getById(id)
-        if (!facturaCompraDetalleInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [
-                    message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                    id
-            ])
-            redirect(action: "list")
-            return
-        }
-
+        def detalle = facturaCompraDetalleService.getById(id)
+        def factura = detalle.getFactura()
+        factura.setTotal(factura.getTotal() - detalle.getSubtotal())
         facturaCompraDetalleService.delete(id)
-
-        flash.message = message(code: 'default.deleted.message', args: [
-                message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'),
-                id
-        ])
-        redirect(action: "list")
+        facturaCompraService.update(factura.getId(), factura)
+        redirect(action: "edit", controller: "facturaCompra", params: [id: factura.getId()])
     }
 
     protected void notFound() {
         request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'facturaCompraDetalle.label', default: 'Factura Compra Detalle'), params.id])
-                redirect action: "index", method: "GET"
-            }
             '*'{ render status: NOT_FOUND }
         }
     }

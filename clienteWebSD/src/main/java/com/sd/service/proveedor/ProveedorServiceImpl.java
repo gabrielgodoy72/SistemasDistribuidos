@@ -39,6 +39,10 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
             proveedorBResult.setPage(result.getPage());
             proveedorBResult.setTotalPages(result.getTotalPages());
             proveedorBResult.setTotal(result.getTotal());
+            proveedorBResult.setHasPrev(result.get_hasPrev());
+            proveedorBResult.setHasNext(result.get_hasNext());
+            proveedorBResult.setPrevPage(result.getPrevPage());
+            proveedorBResult.setNextPage(result.getNextPage());
         }
         return proveedorBResult;
     }
@@ -49,8 +53,8 @@ public class ProveedorServiceImpl extends BaseServiceImpl<ProveedorB, ProveedorD
     }
 
     @Override
-    public void delete(Integer id) {
-        proveedorResource.delete(id);
+    public ProveedorB delete(Integer id) {
+        return convertDtoToBean(proveedorResource.delete(id));
     }
 
     @Override

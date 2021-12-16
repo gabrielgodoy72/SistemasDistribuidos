@@ -39,6 +39,17 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 	}
 
 	@Override
+	@Cacheable(value = Setting.CACHE_NAME, key = "'api_servicio_' + count")
+	public Integer count() {
+		Integer countCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
+				.get("api_servicio_count", Integer.class);
+		if (countCacheado != null) {
+			return countCacheado;
+		}
+		return (int) repository.count();
+	}
+	
+	@Override
 	@Cacheable(value = Setting.CACHE_NAME, key = "'api_servicio_' + #id")
 	public ServicioDTO getById(final Integer id) {
 		ServicioDTO servicioCacheado = cacheManager.getCache(Setting.CACHE_NAME)//
@@ -77,6 +88,9 @@ public class ServicioServiceImpl extends BaseServiceImpl<ServicioDTO, ServicioDo
 		result.setServicios(list);
 		result.setPage(pages.getNumber());
 		result.setTotalPages(pages.getTotalPages());
+		result.setTotal((int) repository.count());
+		result.set_hasPrev(pages.hasPrevious());
+		result.set_hasNext(pages.hasNext());
 		return result;
 	}
 

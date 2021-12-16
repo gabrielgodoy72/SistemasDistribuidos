@@ -10,9 +10,13 @@ import java.util.stream.Collectors;
 public abstract class BaseBResult<BEAN extends BaseBean> implements Serializable {
     private static final long serialVersionUID = 1L;
     private List<BEAN> _beans;
-    private Integer total;
+    private Integer total; // total de beans en la bd
     private Integer totalPages;
     private Integer page = 0;
+    private Boolean hasPrev;
+    private Boolean hasNext;
+    private Integer prevPage;
+    private Integer nextPage;
 
     public BaseBResult() {
     }
@@ -50,11 +54,34 @@ public abstract class BaseBResult<BEAN extends BaseBean> implements Serializable
     }
 
     public Integer getNextPage() {
-        return this.page++;
+        return this.nextPage;
+    }
+
+    public void setNextPage(Integer nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    public void setPrevPage(Integer prevPage) {
+        this.prevPage = prevPage;
     }
 
     public Integer getPrevPage() {
-        return this.page--;
+        return this.prevPage;
     }
 
+    public Boolean getHasPrev() {
+        return hasPrev;
+    }
+
+    public void setHasPrev(Boolean hasPrev) {
+        this.hasPrev = hasPrev;
+    }
+
+    public Boolean getHasNext() {
+        return hasNext;
+    }
+
+    public void setHasNext(Boolean hasNext) {
+        this.hasNext = hasNext;
+    }
 }

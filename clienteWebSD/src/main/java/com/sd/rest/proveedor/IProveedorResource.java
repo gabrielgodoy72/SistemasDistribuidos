@@ -8,4 +8,8 @@ public interface IProveedorResource extends IBaseResource<ProveedorDTO> {
 
     public ProveedorResult getAll(Integer page);
 
+    public ProveedorDTO getByNombre(String nombre);
+
+    public ProveedorDTO getByRuc(String ruc);
+
 }
